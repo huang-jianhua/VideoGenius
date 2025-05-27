@@ -385,11 +385,11 @@ Trying to load the model directly from the local cache, if it exists.
 - **记忆恢复指南.md**: 在新的AI会话中快速恢复上下文的操作指南
 
 #### 如何使用记忆恢复功能
-当你在Cursor中切换到其他项目后，再回到MoneyPrinterTurbo时：
+当你在Cursor中切换到其他项目后，再回到VideoGenius时：
 
 1. 在新的AI聊天窗口中复制粘贴以下内容：
 ```
-请阅读 AI助手记忆存储.md 文件，恢复对MoneyPrinterTurbo项目的上下文。
+请阅读 AI助手记忆存储.md 文件，恢复对VideoGenius项目的上下文。
 
 我是那个不懂代码的初中生用户，请继续用简单易懂的方式帮助我。
 
@@ -405,7 +405,7 @@ Trying to load the model directly from the local cache, if it exists.
 
 这个系统确保了无论何时何地，AI助手都能为您提供连贯、专业的服务。
 
-## 🎯 项目当前状态
+## 🎯 项目当前状态 - VideoGenius
 
 ### 环境配置 ✅
 - Python 3.12.6 环境已配置
@@ -422,11 +422,288 @@ Trying to load the model directly from the local cache, if it exists.
 - 8个高质量MP4素材可用
 - 自动格式检查和错误处理
 
+### 智能启动系统 ✅ **新增 (2025年5月)**
+- 🚀 launcher.bat - 主启动器菜单
+- 🔧 start_smart.bat - 智能启动脚本
+- 🔍 check_env.bat - 环境检查工具
+- 📋 完整的用户友好错误提示
+
 ### 核心功能状态
 - ✅ AI文案生成: 正常工作  
 - ✅ 语音合成: Azure TTS中文语音
 - ✅ 字幕生成: edge模式正常
 - ✅ 视频合成: MoviePy引擎稳定运行
 - ✅ 背景音乐: 支持随机和指定音乐
+- ✅ 智能启动: 一键启动，自动修复问题
 
-项目完全可用，您可以正常生成高质量的AI视频内容！
+**VideoGenius项目完全可用，现在启动更加简单便捷！**
+
+# 🎬 VideoGenius
+
+> **AI驱动的智能视频生成工具** - 让创意变成现实
+
+## 📖 项目简介
+
+VideoGenius 是一个基于人工智能的智能视频生成工具，只需输入主题或关键词，即可自动生成高质量的短视频。项目使用Python开发，集成了多种AI服务，支持自动化的视频文案生成、素材搜索、语音合成、字幕添加和视频编辑。
+
+### ✨ 核心特性
+
+🤖 **AI智能生成**
+- 基于大语言模型的智能文案创作
+- 自动关键词提取和素材匹配
+- 多语言支持和本地化
+
+🎨 **现代化界面** *(2025年5月新增)*
+- 精美的深色主题设计
+- 响应式布局，完美适配移动端
+- 直观的操作流程和实时状态反馈
+- 现代化的进度条和状态指示器
+
+🎬 **专业视频制作**
+- 支持多种视频比例（16:9横屏 / 9:16竖屏）
+- 丰富的转场效果和拼接模式
+- 高质量视频输出和压缩优化
+
+🎵 **多样化音频**
+- 集成Azure TTS和SiliconFlow语音合成
+- 支持多种语音风格和语言
+- 自定义背景音乐和音量控制
+
+💬 **智能字幕系统**
+- 自动语音识别和字幕生成
+- 多种字幕样式和位置选择
+- 实时字幕预览功能
+
+📂 **丰富素材来源**
+- Pexels高质量免费视频素材
+- Pixabay图片和视频资源
+- 本地文件上传支持
+- 主流视频平台素材爬取
+
+## 🚀 快速开始
+
+### 环境要求
+- Python 3.8+ (推荐Python 3.12)
+- Windows 10/11 或 macOS 或 Linux
+- 4GB+ 可用内存
+- 稳定的网络连接
+
+### 一键启动
+
+1. **使用智能启动器**（推荐）
+   ```bash
+   # 双击运行
+   launcher.bat
+   
+   # 或者命令行运行
+   .\launcher.bat
+   ```
+
+2. **选择启动选项**
+   - `1` - 智能启动（推荐，包含环境检查）
+   - `2` - 快速启动
+   - `3` - 环境检查
+   - `4` - 配置助手
+   - `5` - 查看文档
+
+3. **访问界面**
+   - 自动打开浏览器：http://localhost:8501
+   - 享受全新的现代化界面体验！
+
+### 手动启动
+```bash
+# 设置环境路径
+set PYTHONPATH=%CD%
+
+# 启动应用
+py -m streamlit run webui\Main.py --server.port=8501
+```
+
+## 🎨 界面展示
+
+### 新版现代化界面特性
+- **🌟 炫酷主题**：深色渐变背景，现代化卡片设计
+- **📱 移动适配**：完美支持手机、平板访问
+- **🎯 状态指示**：实时显示配置状态和操作反馈  
+- **⚡ 流畅动画**：淡入动画、悬停效果、加载动画
+- **🔧 智能提示**：详细的帮助说明和配置建议
+
+### 主要界面区域
+1. **英雄区域**：VideoGenius品牌展示和功能特性
+2. **配置面板**：AI模型、素材源、性能参数设置
+3. **脚本生成**：主题输入、AI生成、实时预览
+4. **视频设置**：画面比例、转场效果、时长控制
+5. **音频配置**：语音合成、背景音乐、音量调节
+6. **字幕设置**：字体样式、位置、颜色预览
+7. **生成控制**：智能检查、进度显示、结果展示
+
+## ⚙️ 配置指南
+
+### 1. AI模型配置
+
+**推荐配置（国内用户）**
+- **DeepSeek**：免费额度充足，无需VPN
+  - API Key: [申请地址](https://platform.deepseek.com/api_keys)
+  - Base URL: `https://api.deepseek.com`
+  - Model: `deepseek-chat`
+
+- **Moonshot**：质量稳定，响应快速
+  - API Key: [申请地址](https://platform.moonshot.cn/console/api-keys)
+  - Base URL: `https://api.moonshot.cn/v1`
+  - Model: `moonshot-v1-8k`
+
+### 2. 视频素材配置
+
+**Pexels（推荐）**
+- 免费高质量视频素材
+- API Key: [申请地址](https://www.pexels.com/api/)
+- 素材丰富，质量优秀
+
+**Pixabay**
+- 图片和视频兼备
+- API Key: [申请地址](https://pixabay.com/api/docs/)
+- 素材种类多样
+
+### 3. 语音合成配置
+
+**SiliconFlow TTS（推荐）**
+- 国内服务，速度快
+- API Key: [申请地址](https://cloud.siliconflow.cn/)
+- 支持多种语音风格
+
+**Azure TTS**
+- 微软官方服务
+- 需要Azure订阅
+- 语音质量极高
+
+## 📁 项目结构
+
+```
+VideoGenius/
+├── 📁 webui/                  # Web界面
+│   ├── Main.py               # 主界面文件
+│   ├── styles.py             # 现代化样式
+│   └── .streamlit/           # Streamlit配置
+├── 📁 app/                    # 核心应用
+│   ├── config/               # 配置管理
+│   ├── models/               # 数据模型
+│   ├── services/             # 业务服务
+│   └── utils/                # 工具函数
+├── 📁 storage/                # 存储目录
+│   ├── tasks/                # 生成任务
+│   └── video_materials/      # 视频素材
+├── 📁 resource/               # 资源文件
+│   ├── fonts/                # 字体文件
+│   └── songs/                # 背景音乐
+├── 🎯 launcher.bat            # 智能启动器
+├── 🔧 start_smart.bat         # 智能启动脚本
+├── 🛠️ check_env.bat          # 环境检查工具
+└── 📋 README.md              # 项目说明
+```
+
+## 🛠️ 开发进展
+
+### ✅ 已完成功能
+
+#### 第一阶段：基础功能完善
+- ✅ **简化启动流程**（2025年5月完成）
+  - 智能启动脚本和环境检查
+  - 自动依赖安装和配置修复
+  - 用户友好的启动器菜单
+
+- ✅ **界面优化**（2025年5月完成）
+  - 现代化深色主题设计
+  - 响应式移动端适配
+  - 进度条和状态指示器
+  - 动画效果和用户反馈
+
+#### 核心功能
+- ✅ AI文案生成（支持多种模型）
+- ✅ 多素材源集成（Pexels、Pixabay、本地）
+- ✅ 语音合成（Azure TTS、SiliconFlow）
+- ✅ 智能字幕系统
+- ✅ 视频编辑和合成
+- ✅ 配置管理和持久化
+
+### 🚧 开发中功能
+
+#### 第二阶段：功能扩展（预计3-4周）
+- 🔄 **配置管理优化**
+  - 图形化配置界面
+  - 配置验证和错误检查
+  - 配置备份和恢复
+
+- 🔄 **素材管理增强**
+  - 自动检查和修复素材文件
+  - 支持更多视频格式
+  - 素材预览和管理界面
+
+#### 第三阶段：高级功能（预计5-8周）
+- 📋 **批量处理功能**
+- 📋 **模板系统**
+- 📋 **社交媒体集成**
+- 📋 **AI能力增强**
+
+## 🎯 使用技巧
+
+### 最佳实践
+1. **主题选择**：选择具体、有针对性的主题
+2. **关键词优化**：使用准确的关键词获得更好的素材
+3. **参数调整**：根据目标平台调整视频比例和时长
+4. **音频平衡**：合理调整语音和背景音乐的音量比例
+
+### 常见问题
+- **生成失败**：检查API配置和网络连接
+- **素材不匹配**：优化关键词或更换素材源
+- **音频问题**：确认TTS服务配置正确
+- **字幕错位**：调整字幕位置和字体大小
+
+## 🤝 贡献指南
+
+我们欢迎所有形式的贡献！
+
+### 贡献方式
+- 🐛 报告Bug和问题
+- 💡 提出新功能建议  
+- 📖 改进文档
+- 🔧 提交代码修复
+- 🎨 界面设计优化
+
+### 开发环境
+```bash
+# 克隆仓库
+git clone https://github.com/your-repo/VideoGenius.git
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 启动开发服务器
+streamlit run webui/Main.py
+```
+
+## 📄 许可证
+
+本项目基于 [MIT许可证](LICENSE) 开源。
+
+## 🙏 致谢
+
+- **Streamlit** - 优秀的Python Web框架
+- **OpenAI/DeepSeek/Moonshot** - 强大的AI语言模型
+- **Pexels/Pixabay** - 丰富的免费素材资源
+- **Azure/SiliconFlow** - 高质量语音合成服务
+
+## 📞 联系我们
+
+- 🐛 Bug报告：[GitHub Issues](https://github.com/your-repo/VideoGenius/issues)
+- 💬 功能建议：[GitHub Discussions](https://github.com/your-repo/VideoGenius/discussions)
+- 📧 邮箱联系：your-email@example.com
+
+---
+
+<div align="center">
+
+**🎬 VideoGenius - 让AI助力您的视频创作之旅！**
+
+*如果这个项目对您有帮助，请给我们一个 ⭐ Star！*
+
+</div>
