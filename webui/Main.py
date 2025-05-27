@@ -77,6 +77,49 @@ create_hero_section()
 # 🎈 添加浮动操作按钮
 add_floating_action_button()
 
+# 📋 页面导航
+st.markdown("---")
+
+# 创建页面选择器
+page_options = {
+    "🎬 视频生成": "main",
+    "🎛️ 配置管理": "config"
+}
+
+# 初始化页面状态
+if "current_page" not in st.session_state:
+    st.session_state["current_page"] = "main"
+
+# 页面选择器
+col_nav1, col_nav2, col_nav3 = st.columns([1, 2, 1])
+
+with col_nav2:
+    selected_page_name = st.selectbox(
+        "选择功能页面",
+        options=list(page_options.keys()),
+        index=0 if st.session_state["current_page"] == "main" else 1,
+        help="切换到不同的功能页面"
+    )
+    
+    # 更新当前页面
+    st.session_state["current_page"] = page_options[selected_page_name]
+
+# 根据选择的页面显示不同内容
+if st.session_state["current_page"] == "config":
+    # 显示配置管理页面
+    try:
+        from webui.pages.config_manager import render_config_manager
+        render_config_manager()
+    except ImportError as e:
+        st.error(f"❌ 配置管理页面加载失败: {str(e)}")
+        st.info("💡 请确保配置管理模块已正确安装")
+    
+    # 配置管理页面不需要显示后续的视频生成界面
+    st.stop()
+
+# 如果是主页面，继续显示原有的视频生成界面
+st.markdown("---")
+
 # 定义资源目录
 font_dir = os.path.join(root_dir, "resource", "fonts")
 song_dir = os.path.join(root_dir, "resource", "songs")
