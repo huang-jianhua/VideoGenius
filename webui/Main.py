@@ -47,80 +47,7 @@ from app.services import llm, voice
 from app.services import task as tm
 from app.utils import utils
 
-# 🎨 更新页面配置以支持现代化主题
-st.set_page_config(
-    page_title="VideoGenius - AI视频生成工具",
-    page_icon="🎬",
-    layout="wide",
-    initial_sidebar_state="auto",
-    menu_items={
-        "Get Help": "https://github.com/harry0703/MoneyPrinterTurbo/wiki",
-        "Report a bug": "https://github.com/harry0703/MoneyPrinterTurbo/issues",
-        "About": "# 🎬 VideoGenius\n\n**AI驱动的智能视频生成工具**\n\n"
-        "只需提供一个主题或关键词，VideoGenius就能自动生成视频文案、视频素材、"
-        "视频字幕和背景音乐，并合成高清短视频。\n\n"
-        "✨ **主要特性：**\n"
-        "- 🤖 AI智能文案生成\n"
-        "- 🎵 自动配音和字幕\n"
-        "- 📹 高质量视频合成\n"
-        "- 🚀 一键操作，简单易用\n\n"
-        "[GitHub项目地址](https://github.com/harry0703/MoneyPrinterTurbo)",
-    },
-)
-
-# 🎨 应用现代化主题
-apply_modern_theme()
-
-# 🚀 创建英雄区域（替代原来的简单标题）
-create_hero_section()
-
-# 🎈 添加浮动操作按钮
-add_floating_action_button()
-
-# 📋 页面导航
-st.markdown("---")
-
-# 创建页面选择器
-page_options = {
-    "🎬 视频生成": "main",
-    "🎛️ 配置管理": "config"
-}
-
-# 初始化页面状态
-if "current_page" not in st.session_state:
-    st.session_state["current_page"] = "main"
-
-# 页面选择器
-col_nav1, col_nav2, col_nav3 = st.columns([1, 2, 1])
-
-with col_nav2:
-    selected_page_name = st.selectbox(
-        "选择功能页面",
-        options=list(page_options.keys()),
-        index=0 if st.session_state["current_page"] == "main" else 1,
-        help="切换到不同的功能页面"
-    )
-    
-    # 更新当前页面
-    st.session_state["current_page"] = page_options[selected_page_name]
-
-# 根据选择的页面显示不同内容
-if st.session_state["current_page"] == "config":
-    # 显示配置管理页面
-    try:
-        from webui.pages.config_manager import render_config_manager
-        render_config_manager()
-    except ImportError as e:
-        st.error(f"❌ 配置管理页面加载失败: {str(e)}")
-        st.info("💡 请确保配置管理模块已正确安装")
-    
-    # 配置管理页面不需要显示后续的视频生成界面
-    st.stop()
-
-# 如果是主页面，继续显示原有的视频生成界面
-st.markdown("---")
-
-# 定义资源目录
+# 🌐 提前初始化多语言系统
 font_dir = os.path.join(root_dir, "resource", "fonts")
 song_dir = os.path.join(root_dir, "resource", "songs")
 i18n_dir = os.path.join(root_dir, "webui", "i18n")
@@ -140,49 +67,141 @@ if "ui_language" not in st.session_state:
 # 加载语言文件
 locales = utils.load_locales(i18n_dir)
 
-# 🌐 创建现代化的语言选择器
-col1, col2, col3 = st.columns([2, 2, 1])
+def tr(key):
+    loc = locales.get(st.session_state["ui_language"], {})
+    return loc.get("Translation", {}).get(key, key)
 
-with col1:
-    # 版本信息展示
+# 🎨 更新页面配置以支持现代化主题和多语言
+st.set_page_config(
+    page_title="VideoGenius - AI视频生成工具",
+    page_icon="🎬",
+    layout="wide",
+    initial_sidebar_state="auto",
+    menu_items={
+        "Get Help": "https://harryai.cc",
+        "Report a bug": "https://github.com/harry0703/MoneyPrinterTurbo/issues",
+        "About": tr("About"),
+    },
+)
+
+# 🎨 应用现代化主题
+apply_modern_theme()
+
+# 🚀 创建英雄区域（替代原来的简单标题）
+create_hero_section()
+
+# 🎈 添加浮动操作按钮
+add_floating_action_button()
+
+# 📋 整合的导航和状态区域
+st.markdown("---")
+
+# 创建整合的导航栏
+nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2, 2, 2, 2])
+
+# 页面选择器
+with nav_col1:
+    page_options = {
+        tr("Video Generation"): "main",
+        tr("Configuration Management"): "config"
+    }
+    
+    # 初始化页面状态
+    if "current_page" not in st.session_state:
+        st.session_state["current_page"] = "main"
+    
+    # 获取当前页面的显示名称
+    current_page_display = None
+    for display_name, page_value in page_options.items():
+        if page_value == st.session_state["current_page"]:
+            current_page_display = display_name
+            break
+    
+    # 页面选择器 - 使用key来避免重复选择问题
+    selected_page_name = st.selectbox(
+        tr("Select Function Page"),
+        options=list(page_options.keys()),
+        index=list(page_options.keys()).index(current_page_display) if current_page_display else 0,
+        help=tr("Switch to different function pages"),
+        key="page_selector"
+    )
+    
+    # 只有当选择真正改变时才更新页面
+    new_page = page_options[selected_page_name]
+    if new_page != st.session_state["current_page"]:
+        st.session_state["current_page"] = new_page
+        st.rerun()
+
+# 服务器状态显示
+with nav_col2:
     version_info = f"v{config.project_version}"
     st.markdown(f"""
-    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
         <span style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4); 
                      color: white; padding: 0.25rem 0.75rem; border-radius: 15px; 
                      font-size: 0.8rem; font-weight: 600;">
             {version_info}
         </span>
-        <span style="color: #B0B0B0; font-size: 0.9rem;">
-            当前运行状态：正常
-        </span>
     </div>
     """, unsafe_allow_html=True)
+    st.caption("🟢 服务器运行正常")
 
-with col3:
-    # 现代化语言选择器
+# 系统状态指示器
+with nav_col3:
+    llm_status = "已配置" if config.app.get("deepseek_api_key") or config.app.get("openai_api_key") else "未配置"
+    status_color = "🟢" if llm_status == "已配置" else "🟡"
+    st.caption(f"{status_color} AI模型: {llm_status}")
+    
+    material_count = 0
+    if os.path.exists(os.path.join(root_dir, "storage", "video_materials")):
+        material_count = len(os.listdir(os.path.join(root_dir, "storage", "video_materials")))
+    st.caption(f"📁 素材文件: {material_count}个")
+
+# 语言选择器
+with nav_col4:
+    # 限制只显示已完善的语言
+    available_languages = ["zh", "en"]  # 只显示中文和英文
     display_languages = []
     selected_index = 0
-    for i, code in enumerate(locales.keys()):
-        display_languages.append(f"{code} - {locales[code].get('Language')}")
-        if code == st.session_state.get("ui_language", ""):
-            selected_index = i
+    
+    for i, code in enumerate(available_languages):
+        if code in locales:
+            display_languages.append(f"{code} - {locales[code].get('Language')}")
+            if code == st.session_state.get("ui_language", ""):
+                selected_index = i
 
     selected_language = st.selectbox(
-        "🌐 Language",
+        "🌐 " + tr("Language"),
         options=display_languages,
         index=selected_index,
-        key="top_language_selector",
+        key="language_selector",
         help="选择界面语言 / Select interface language"
     )
+    
     if selected_language:
         code = selected_language.split(" - ")[0].strip()
-        st.session_state["ui_language"] = code
-        config.ui["language"] = code
-        # 语言切换成功提示
-        show_status_indicator('success', f'语言已切换到 {code}')
+        if code != st.session_state.get("ui_language", ""):
+            st.session_state["ui_language"] = code
+            config.ui["language"] = code
+            show_status_indicator('success', f'✅ 语言已切换到 {code}')
+            # 保存配置并重新运行
+            config.save_config()
+            st.rerun()
 
-# 添加分隔线
+# 根据选择的页面显示不同内容
+if st.session_state["current_page"] == "config":
+    # 显示配置管理页面
+    try:
+        from webui.pages.config_manager import render_config_manager
+        render_config_manager()
+    except ImportError as e:
+        st.error(f"❌ 配置管理页面加载失败: {str(e)}")
+        st.info("💡 请确保配置管理模块已正确安装")
+    
+    # 配置管理页面不需要显示后续的视频生成界面
+    st.stop()
+
+# 如果是主页面，继续显示原有的视频生成界面
 st.markdown("---")
 
 support_locales = [
@@ -195,7 +214,6 @@ support_locales = [
     "vi-VN",
     "th-TH",
 ]
-
 
 def get_all_fonts():
     fonts = []
@@ -279,14 +297,6 @@ def init_log():
 
 
 init_log()
-
-locales = utils.load_locales(i18n_dir)
-
-
-def tr(key):
-    loc = locales.get(st.session_state["ui_language"], {})
-    return loc.get("Translation", {}).get(key, key)
-
 
 # 🎛️ 现代化基础设置区域
 if not config.app.get("hide_config", False):

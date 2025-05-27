@@ -707,3 +707,173 @@ streamlit run webui/Main.py
 *如果这个项目对您有帮助，请给我们一个 ⭐ Star！*
 
 </div>
+
+# VideoGenius - AI视频生成工具
+
+VideoGenius是一个基于AI的智能视频生成工具，能够根据主题或关键词自动生成视频脚本、素材、字幕和背景音乐，并合成高清短视频。
+
+## 🚀 快速开始
+
+### 环境要求
+- Python 3.8+
+- Windows/macOS/Linux
+
+### 安装步骤
+
+1. **克隆项目**
+```bash
+git clone https://github.com/harry0703/MoneyPrinterTurbo.git
+cd VideoGenius
+```
+
+2. **安装依赖**
+```bash
+pip install -r requirements.txt
+```
+
+3. **启动应用**
+```bash
+# Windows
+set PYTHONPATH=%CD% && python -m streamlit run webui\Main.py --server.port=8501 --server.address=localhost --browser.gatherUsageStats=false
+
+# macOS/Linux  
+export PYTHONPATH=$PWD && python -m streamlit run webui/Main.py --server.port=8501 --server.address=localhost --browser.gatherUsageStats=false
+```
+
+4. **访问应用**
+打开浏览器访问：http://localhost:8501
+
+## ✨ 主要功能
+
+### 🎬 视频生成
+- **AI智能脚本生成**：输入主题，AI自动生成视频脚本
+- **多素材源支持**：Pexels、Pixabay、本地文件等
+- **智能语音合成**：支持Azure TTS、SiliconFlow等多种TTS服务
+- **自定义字幕**：可配置字体、颜色、位置等
+- **背景音乐**：支持随机或自定义背景音乐
+
+### 🎛️ 配置管理
+- **AI模型配置**：支持OpenAI、DeepSeek、Moonshot等多种LLM
+- **语音合成配置**：Azure TTS、SiliconFlow TTS等
+- **素材源配置**：Pexels、Pixabay API配置
+- **界面个性化**：多语言支持、主题设置等
+
+### 🌐 多语言支持
+- **中文**（简体中文）
+- **英文**（English）
+- 其他语言正在完善中
+
+## 🔧 配置说明
+
+### AI模型配置
+推荐使用以下AI服务商：
+
+1. **DeepSeek**（推荐）
+   - 国内用户友好，无需VPN
+   - 免费额度充足
+   - API申请：https://platform.deepseek.com/api_keys
+
+2. **Moonshot**
+   - 国内服务，响应快速
+   - API申请：https://platform.moonshot.cn/console/api-keys
+
+3. **OpenAI**
+   - 需要VPN访问
+   - API申请：https://platform.openai.com/api-keys
+
+### 素材源配置
+1. **Pexels**（推荐）
+   - 免费高质量视频素材
+   - API申请：https://www.pexels.com/api/
+
+2. **Pixabay**
+   - 丰富的图片和视频素材
+   - API申请：https://pixabay.com/api/docs/
+
+### 语音合成配置
+1. **Azure TTS**
+   - 高质量语音合成
+   - 配置：https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices
+
+2. **SiliconFlow TTS**
+   - 国内服务，配置简单
+   - API申请：https://cloud.siliconflow.cn/account/ak
+
+## 🛠️ 故障排除
+
+### 常见问题
+
+1. **应用启动失败**
+   - 检查Python版本是否为3.8+
+   - 确保所有依赖已正确安装
+   - 检查端口8501是否被占用
+
+2. **多语言菜单错误**
+   - 已修复：Streamlit菜单项URL格式问题
+   - 确保翻译文件格式正确
+
+3. **API配置问题**
+   - 检查API Key是否正确
+   - 确认网络连接正常
+   - 验证API服务商的配额和权限
+
+4. **视频生成失败**
+   - 检查AI模型API配置
+   - 确认素材源API可用
+   - 检查磁盘空间是否充足
+
+### 最近修复的问题
+
+#### 多语言菜单项错误修复（2025-05-27）
+**问题**：Streamlit菜单项包含描述性文本而非纯URL，导致`StreamlitInvalidURLError`
+
+**解决方案**：
+- 修复了所有翻译文件中的菜单项格式
+- 将多语言初始化移到`st.set_page_config()`之前
+- 确保菜单项使用纯URL格式
+
+**影响的文件**：
+- `webui/i18n/zh.json`
+- `webui/i18n/en.json` 
+- `webui/i18n/de.json`
+- `webui/i18n/vi.json`
+- `webui/i18n/pt.json`
+- `webui/Main.py`
+
+## 📝 更新日志
+
+### v1.2.6 (2025-05-27)
+- ✅ 修复多语言菜单项URL格式错误
+- ✅ 优化多语言初始化流程
+- ✅ 改进界面导航体验
+- ✅ 限制语言选择为完全支持的语言（中文、英文）
+
+### 开发计划
+- 🔄 完善其他语言翻译
+- 🔄 添加更多TTS服务商支持
+- 🔄 优化视频生成性能
+- 🔄 增加更多视频效果和转场
+
+## 🤝 贡献指南
+
+欢迎提交Issue和Pull Request来帮助改进项目！
+
+1. Fork项目
+2. 创建功能分支
+3. 提交更改
+4. 推送到分支
+5. 创建Pull Request
+
+## 📄 许可证
+
+本项目采用MIT许可证 - 查看[LICENSE](LICENSE)文件了解详情
+
+## 🔗 相关链接
+
+- [GitHub项目地址](https://github.com/harry0703/MoneyPrinterTurbo)
+- [问题反馈](https://github.com/harry0703/MoneyPrinterTurbo/issues)
+- [获取帮助](https://harryai.cc)
+
+---
+
+**VideoGenius** - 让AI为您创造精彩视频内容！🎬✨
