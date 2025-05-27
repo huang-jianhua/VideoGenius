@@ -390,6 +390,7 @@ if not config.app.get("hide_config", False):
                 "Azure",
                 "Qwen",
                 "DeepSeek",
+                "Claude",
                 "Gemini",
                 "Ollama",
                 "G4f",
@@ -415,7 +416,7 @@ if not config.app.get("hide_config", False):
             config.app["llm_provider"] = llm_provider
             
             # 推荐提示
-            if llm_provider in ["deepseek", "moonshot"]:
+            if llm_provider in ["deepseek", "moonshot", "ernie"]:
                 show_status_indicator('success', '推荐选择，国内用户友好')
             elif llm_provider in ["openai", "gemini"]:
                 show_status_indicator('warning', '需要VPN访问')
@@ -441,6 +442,19 @@ if not config.app.get("hide_config", False):
                 - **API Key**: [点击申请](https://platform.deepseek.com/api_keys) (免费送额度)
                 - **Base Url**: https://api.deepseek.com  
                 - **Model Name**: deepseek-chat
+                """
+                
+            elif llm_provider == "claude":
+                if not llm_model_name:
+                    llm_model_name = "claude-3-5-sonnet-20241022"
+                # Claude使用官方SDK，不需要base_url
+                llm_base_url = ""
+                tips = """
+                **Claude 配置说明**
+                - **API Key**: [点击申请](https://console.anthropic.com/) (需要VPN)
+                - **Base Url**: 留空（使用官方SDK）
+                - **Model Name**: claude-3-5-sonnet-20241022
+                > 🎯 **优势**: 文案生成质量优秀，创意性强
                 """
                 
             elif llm_provider == "moonshot":
@@ -475,11 +489,25 @@ if not config.app.get("hide_config", False):
                 - **Base Url**: http://localhost:11434/v1
                 - **Model Name**: qwen:7b (需先下载模型)
                 """
+                
+            elif llm_provider == "ernie":
+                if not llm_model_name:
+                    llm_model_name = "ERNIE-3.5-8K"
+                # 文心一言不需要base_url，使用官方SDK
+                llm_base_url = ""
+                tips = """
+                **文心一言 配置说明**
+                - **API Key**: [点击申请](https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application) (国内稳定)
+                - **Secret Key**: 百度千帆平台的Secret Key
+                - **Base Url**: 留空（使用官方SDK）
+                - **Model Name**: ERNIE-3.5-8K (推荐) 或 ERNIE-4.0-8K
+                > 🎯 **优势**: 中文理解优秀，国内访问稳定，无需VPN
+                """
 
             # 用户友好的建议提示
             if tips:
                 if config.ui.get("language", "zh").startswith("zh"):
-                    if llm_provider in ["deepseek", "moonshot"]:
+                    if llm_provider in ["deepseek", "moonshot", "ernie"]:
                         st.success("🎉 **推荐选择！** 国内用户友好，无需VPN，免费额度充足")
                     elif llm_provider in ["openai", "gemini"]:
                         st.warning("⚠️ **注意：** 需要VPN全局代理访问")

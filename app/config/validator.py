@@ -77,12 +77,16 @@ class ConfigValidator:
                 return self._test_openai_connection(config)
             elif provider.lower() == "deepseek":
                 return self._test_deepseek_connection(config)
+            elif provider.lower() == "claude":
+                return self._test_claude_connection(config)
             elif provider.lower() == "moonshot":
                 return self._test_moonshot_connection(config)
             elif provider.lower() == "gemini":
                 return self._test_gemini_connection(config)
             elif provider.lower() == "qwen":
                 return self._test_qwen_connection(config)
+            elif provider.lower() == "ernie":
+                return self._test_ernie_connection(config)
             else:
                 return False, f"暂不支持 {provider} 的连接测试"
                 
@@ -132,6 +136,41 @@ class ConfigValidator:
             config_copy["base_url"] = "https://api.deepseek.com"
         return self._test_openai_connection(config_copy)
     
+    def _test_claude_connection(self, config: Dict) -> Tuple[bool, str]:
+        """测试Claude连接"""
+        api_key = config.get("api_key", "")
+        
+        if not api_key:
+            return False, "API密钥未设置"
+            
+        try:
+            from anthropic import Anthropic
+            
+            client = Anthropic(api_key=api_key)
+            
+            # 使用简单的消息测试连接
+            response = client.messages.create(
+                model="claude-3-haiku-20240307",  # 使用较便宜的模型测试
+                max_tokens=10,
+                messages=[{"role": "user", "content": "Hi"}]
+            )
+            
+            if response and response.content:
+                return True, "连接成功！API密钥有效"
+            else:
+                return False, "API调用失败，返回空响应"
+                
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "api_key" in error_msg or "authentication" in error_msg:
+                return False, "API密钥无效"
+            elif "rate" in error_msg:
+                return False, "API调用频率限制"
+            elif "quota" in error_msg or "billing" in error_msg:
+                return False, "账户额度不足或计费问题"
+            else:
+                return False, f"连接测试失败: {str(e)}"
+    
     def _test_moonshot_connection(self, config: Dict) -> Tuple[bool, str]:
         """测试Moonshot连接"""
         config_copy = config.copy()
@@ -167,6 +206,42 @@ class ConfigValidator:
         """测试通义千问连接"""
         # 通义千问连接测试的具体实现
         return True, "通义千问连接测试暂未实现，请手动验证"
+    
+    def _test_ernie_connection(self, config: Dict) -> Tuple[bool, str]:
+        """测试文心一言连接"""
+        api_key = config.get("api_key", "")
+        secret_key = config.get("secret_key", "")
+        
+        if not api_key:
+            return False, "API Key未设置"
+        if not secret_key:
+            return False, "Secret Key未设置"
+            
+        try:
+            # 导入文心一言服务
+            from app.services.ernie_service import create_ernie_service
+            
+            # 创建服务实例
+            ernie_config = {
+                "ernie_api_key": api_key,
+                "ernie_secret_key": secret_key,
+                "ernie_model_name": config.get("model_name", "ERNIE-3.5-8K")
+            }
+            
+            ernie_service = create_ernie_service(ernie_config)
+            
+            # 测试连接
+            result = ernie_service.test_connection()
+            
+            if result["success"]:
+                return True, result["message"]
+            else:
+                return False, result["message"]
+                
+        except ImportError:
+            return False, "文心一言服务模块未安装，请安装qianfan包"
+        except Exception as e:
+            return False, f"连接测试失败: {str(e)}"
     
     def validate_file_path(self, path: str, check_exists: bool = True) -> Tuple[bool, str]:
         """

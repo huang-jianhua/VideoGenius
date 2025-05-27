@@ -1,0 +1,45 @@
+{
+  "agent": {
+    "maxExecutions": 150,
+    "executionTimeout": 900000,
+    "autoConfirm": false,
+    "continueOnError": true,
+    "maxRetries": 5,
+    "batchSize": 10
+  },
+  "ai": {
+    "maxTokens": 16384,
+    "temperature": 0.1,
+    "contextWindow": 64000,
+    "model": "claude-3.5-sonnet"
+  },
+  "workspace": {
+    "autoSave": true,
+    "formatOnSave": true,
+    "lintOnSave": true,
+    "excludePatterns": [
+      "storage/*",
+      "*.pyc",
+      "__pycache__/*",
+      ".git/*"
+    ]
+  },
+  "python": {
+    "defaultInterpreter": "python",
+    "enableLinting": true,
+    "enableFormatting": true,
+    "formatter": "black",
+    "linter": "flake8"
+  },
+  "streamlit": {
+    "autoReload": true,
+    "port": 8501,
+    "enableCaching": true
+  },
+  "videogenius": {
+    "developmentMode": true,
+    "debugLevel": "INFO",
+    "autoBackup": true,
+    "testMode": false
+  }
+}

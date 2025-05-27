@@ -24,6 +24,7 @@ pixabay_api_keys = []
 #   azure
 #   qwen        (通义千问)
 #   deepseek
+#   claude      (Anthropic Claude)
 #   gemini
 #   ollama
 #   g4f
@@ -98,6 +99,19 @@ qwen_model_name = "qwen-max"
 deepseek_api_key = ""
 deepseek_base_url = "https://api.deepseek.com"
 deepseek_model_name = "deepseek-chat"
+
+########## Claude API Key (Anthropic)
+# Visit https://console.anthropic.com/ to get your API key
+# Claude models are known for excellent text generation quality
+claude_api_key = ""
+claude_model_name = "claude-3-5-sonnet-20241022"
+
+########## ERNIE API Key (百度文心一言)
+# Visit https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application to get your API key
+# 文心一言是百度推出的大语言模型，专注于中文理解和生成
+ernie_api_key = ""
+ernie_secret_key = ""
+ernie_model_name = "ERNIE-3.5-8K"
 
 # Subtitle Provider, "edge" or "whisper"
 # If empty, the subtitle will not be generated

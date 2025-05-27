@@ -11,6 +11,22 @@ from openai.types.chat import ChatCompletion
 
 from app.config import config
 
+# 导入Claude服务
+try:
+    from app.services.claude_service import get_claude_service
+    CLAUDE_SERVICE_AVAILABLE = True
+except ImportError:
+    CLAUDE_SERVICE_AVAILABLE = False
+    logger.warning("Claude service not available")
+
+# 导入文心一言服务
+try:
+    from app.services.ernie_service import create_ernie_service
+    ERNIE_SERVICE_AVAILABLE = True
+except ImportError:
+    ERNIE_SERVICE_AVAILABLE = False
+    logger.warning("ERNIE service not available")
+
 _max_retries = 5
 
 
@@ -19,6 +35,31 @@ def _generate_response(prompt: str) -> str:
         content = ""
         llm_provider = config.app.get("llm_provider", "openai")
         logger.info(f"llm provider: {llm_provider}")
+        
+        # 优化的Claude处理
+        if llm_provider == "claude" and CLAUDE_SERVICE_AVAILABLE:
+            claude_service = get_claude_service()
+            if claude_service.is_available():
+                try:
+                    return claude_service.create_message(prompt)
+                except Exception as e:
+                    logger.error(f"Claude service error: {str(e)}")
+                    # 如果Claude服务失败，继续使用原来的方法
+                    pass
+        
+        # 优化的文心一言处理
+        if llm_provider == "ernie" and ERNIE_SERVICE_AVAILABLE:
+            try:
+                ernie_service = create_ernie_service(config.app)
+                if ernie_service.is_available():
+                    return ernie_service.generate_response(prompt)
+                else:
+                    logger.warning("ERNIE service not available, falling back to original method")
+            except Exception as e:
+                logger.error(f"ERNIE service error: {str(e)}")
+                # 如果文心一言服务失败，继续使用原来的方法
+                pass
+        
         if llm_provider == "g4f":
             model_name = config.app.get("g4f_model_name", "")
             if not model_name:
@@ -74,6 +115,12 @@ def _generate_response(prompt: str) -> str:
                 base_url = config.app.get("deepseek_base_url")
                 if not base_url:
                     base_url = "https://api.deepseek.com"
+            elif llm_provider == "claude":
+                api_key = config.app.get("claude_api_key")
+                model_name = config.app.get("claude_model_name")
+                base_url = config.app.get("claude_base_url")
+                if not base_url:
+                    base_url = "https://api.anthropic.com"
             elif llm_provider == "ernie":
                 api_key = config.app.get("ernie_api_key")
                 secret_key = config.app.get("ernie_secret_key")
@@ -125,7 +172,7 @@ def _generate_response(prompt: str) -> str:
                 except Exception as e:
                     raise Exception(f"[{llm_provider}] error: {str(e)}")
 
-            if llm_provider not in ["pollinations", "ollama"]:  # Skip validation for providers that don't require API key
+            if llm_provider not in ["pollinations", "ollama", "claude", "qwen", "gemini", "cloudflare", "ernie"]:  # Skip validation for providers with special handling
                 if not api_key:
                     raise ValueError(
                         f"{llm_provider}: api_key is not set, please set it in the config.toml file."
@@ -163,6 +210,38 @@ def _generate_response(prompt: str) -> str:
                         )
                 else:
                     raise Exception(f"[{llm_provider}] returned an empty response")
+
+            if llm_provider == "claude":
+                from anthropic import Anthropic
+                
+                # Claude使用自己的SDK，不需要base_url
+                if not api_key:
+                    raise ValueError(f"Claude API key is not set")
+                if not model_name:
+                    model_name = "claude-3-5-sonnet-20241022"  # 默认使用Claude 3.5 Sonnet
+                
+                try:
+                    client = Anthropic(api_key=api_key)
+                    response = client.messages.create(
+                        model=model_name,
+                        max_tokens=4000,
+                        temperature=0.7,
+                        messages=[
+                            {
+                                "role": "user",
+                                "content": prompt
+                            }
+                        ]
+                    )
+                    
+                    if response and response.content:
+                        content = response.content[0].text
+                        return content.replace("\n", "")
+                    else:
+                        raise Exception(f"[{llm_provider}] returned an empty response")
+                        
+                except Exception as e:
+                    raise Exception(f"[{llm_provider}] error: {str(e)}")
 
             if llm_provider == "gemini":
                 import google.generativeai as genai
@@ -258,33 +337,35 @@ def _generate_response(prompt: str) -> str:
                 ).json()
                 return response.get("result")
 
-            if llm_provider == "azure":
-                client = AzureOpenAI(
-                    api_key=api_key,
-                    api_version=api_version,
-                    azure_endpoint=base_url,
-                )
-            else:
-                client = OpenAI(
-                    api_key=api_key,
-                    base_url=base_url,
-                )
+            # OpenAI兼容的提供商使用OpenAI客户端
+            if llm_provider not in ["claude", "qwen", "gemini", "cloudflare", "ernie", "pollinations"]:
+                if llm_provider == "azure":
+                    client = AzureOpenAI(
+                        api_key=api_key,
+                        api_version=api_version,
+                        azure_endpoint=base_url,
+                    )
+                else:
+                    client = OpenAI(
+                        api_key=api_key,
+                        base_url=base_url,
+                    )
 
-            response = client.chat.completions.create(
-                model=model_name, messages=[{"role": "user", "content": prompt}]
-            )
-            if response:
-                if isinstance(response, ChatCompletion):
-                    content = response.choices[0].message.content
+                response = client.chat.completions.create(
+                    model=model_name, messages=[{"role": "user", "content": prompt}]
+                )
+                if response:
+                    if isinstance(response, ChatCompletion):
+                        content = response.choices[0].message.content
+                    else:
+                        raise Exception(
+                            f'[{llm_provider}] returned an invalid response: "{response}", please check your network '
+                            f"connection and try again."
+                        )
                 else:
                     raise Exception(
-                        f'[{llm_provider}] returned an invalid response: "{response}", please check your network '
-                        f"connection and try again."
+                        f"[{llm_provider}] returned an empty response, please check your network connection and try again."
                     )
-            else:
-                raise Exception(
-                    f"[{llm_provider}] returned an empty response, please check your network connection and try again."
-                )
 
         return content.replace("\n", "")
     except Exception as e:

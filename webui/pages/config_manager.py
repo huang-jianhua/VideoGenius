@@ -167,6 +167,7 @@ def render_llm_config():
         providers = [
             ("OpenAI", "openai"),
             ("DeepSeek", "deepseek"), 
+            ("Claude", "claude"),
             ("Moonshot", "moonshot"),
             ("Gemini", "gemini"),
             ("通义千问", "qwen"),
@@ -237,6 +238,10 @@ def render_provider_config(provider: str):
             "base_url": "https://api.deepseek.com",
             "model_name": "deepseek-chat"
         },
+        "claude": {
+            "base_url": "",  # Claude使用官方SDK，不需要base_url
+            "model_name": "claude-3-5-sonnet-20241022"
+        },
         "moonshot": {
             "base_url": "https://api.moonshot.cn/v1",
             "model_name": "moonshot-v1-8k"
@@ -301,6 +306,13 @@ def show_provider_tips(provider: str):
         - API Key: [点击申请](https://platform.deepseek.com/api_keys)
         - 国内直接访问，免费额度充足
         - 推荐使用deepseek-chat模型
+        """,
+        "claude": """
+        **Claude 配置说明**
+        - API Key: [点击申请](https://console.anthropic.com/)
+        - 需要VPN访问（海外服务）
+        - 文案生成质量优秀，创意性强
+        - 推荐使用claude-3-5-sonnet模型
         """,
         "moonshot": """
         **Moonshot 配置说明**
