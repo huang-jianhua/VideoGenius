@@ -1,18 +1,44 @@
-moviepy==2.1.2
-streamlit==1.45.0
-edge_tts==6.1.19
-fastapi==0.115.6
-uvicorn==0.32.1
-openai==1.56.1
-anthropic==0.52.0
-qianfan>=0.4.0
-faster-whisper==1.1.0
-loguru==0.7.3
-google.generativeai==0.8.3
-dashscope==1.20.14
-g4f==0.5.2.2
-azure-cognitiveservices-speech==1.41.1
-redis==5.2.0
-python-multipart==0.0.19
-pyyaml
+# VideoGenius 核心依赖
+streamlit>=1.28.0
+loguru>=0.7.0
+pydantic>=2.0.0
 requests>=2.31.0
+pillow>=10.0.0
+moviepy>=1.0.3
+
+# AI模型支持
+openai>=1.0.0
+anthropic>=0.7.0
+
+# 数据处理和可视化
+plotly>=5.15.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# 音频处理
+azure-cognitiveservices-speech>=1.30.0
+
+# 图像处理
+opencv-python>=4.8.0
+
+# 网络请求
+httpx>=0.24.0
+aiohttp>=3.8.0
+
+# 配置管理
+toml>=0.10.2
+python-dotenv>=1.0.0
+
+# 文件处理
+pathlib2>=2.3.7
+
+# 时间处理
+python-dateutil>=2.8.2
+
+# 系统工具
+psutil>=5.9.0
+
+# 开发工具（可选）
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0

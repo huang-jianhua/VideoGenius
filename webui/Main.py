@@ -79,7 +79,7 @@ st.set_page_config(
     initial_sidebar_state="auto",
     menu_items={
         "Get Help": "https://harryai.cc",
-        "Report a bug": "https://github.com/harry0703/MoneyPrinterTurbo/issues",
+        "Report a bug": "https://github.com/huang-jianhua/VideoGenius/issues",
         "About": tr("About"),
     },
 )
@@ -103,7 +103,12 @@ nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2, 2, 2, 2])
 with nav_col1:
     page_options = {
         tr("Video Generation"): "main",
-        tr("Configuration Management"): "config"
+        "🎓 智能向导": "user_guide",
+        "📚 模板库": "template_library", 
+        "🔄 批量处理": "batch_processor",
+        "📤 导出优化": "export_optimizer",
+        tr("Configuration Management"): "config",
+        "🤖 AI模型管理": "model_management"
     }
     
     # 初始化页面状态
@@ -199,6 +204,84 @@ if st.session_state["current_page"] == "config":
         st.info("💡 请确保配置管理模块已正确安装")
     
     # 配置管理页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "model_management":
+    # 显示AI模型管理页面
+    try:
+        from webui.pages.model_management import render_model_management_page
+        render_model_management_page()
+    except ImportError as e:
+        st.error(f"❌ AI模型管理页面加载失败: {str(e)}")
+        st.info("💡 请确保模型管理模块已正确安装")
+        st.code("pip install plotly pandas", language="bash")
+    except Exception as e:
+        st.error(f"❌ AI模型管理页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+
+elif st.session_state["current_page"] == "user_guide":
+    # 显示智能向导页面
+    try:
+        from webui.pages.user_guide import main as user_guide_main
+        user_guide_main()
+    except ImportError as e:
+        st.error(f"❌ 智能向导页面加载失败: {str(e)}")
+        st.info("💡 智能向导系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 智能向导页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "template_library":
+    # 显示模板库页面
+    try:
+        from webui.pages.template_library import main as template_library_main
+        template_library_main()
+    except ImportError as e:
+        st.error(f"❌ 模板库页面加载失败: {str(e)}")
+        st.info("💡 模板库系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 模板库页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "batch_processor":
+    # 显示批量处理页面
+    try:
+        from webui.pages.batch_processor import main as batch_processor_main
+        batch_processor_main()
+    except ImportError as e:
+        st.error(f"❌ 批量处理页面加载失败: {str(e)}")
+        st.info("💡 批量处理系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 批量处理页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "export_optimizer":
+    # 显示导出优化页面
+    try:
+        from webui.pages.export_optimizer import main as export_optimizer_main
+        export_optimizer_main()
+    except ImportError as e:
+        st.error(f"❌ 导出优化页面加载失败: {str(e)}")
+        st.info("💡 导出优化系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 导出优化页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
     st.stop()
 
 # 如果是主页面，继续显示原有的视频生成界面
@@ -827,6 +910,138 @@ with middle_panel:
 
         st.markdown("---")
         
+        # 🎬 专业级视频效果设置
+        st.markdown("**🎨 专业级视频效果**")
+        
+        # 效果总开关
+        params.enable_professional_effects = st.checkbox(
+            "✨ 启用专业级视频效果",
+            value=True,
+            help="启用专业级转场、滤镜和视觉增强效果，大幅提升视频质量"
+        )
+        
+        if params.enable_professional_effects:
+            effect_col1, effect_col2 = st.columns(2)
+            
+            with effect_col1:
+                # 效果预设选择
+                effect_presets = {
+                    "自动智能": "auto",
+                    "专业商务": "professional", 
+                    "电影风格": "cinematic",
+                    "复古怀旧": "vintage",
+                    "现代时尚": "modern",
+                    "戏剧效果": "dramatic"
+                }
+                
+                selected_preset = st.selectbox(
+                    "🎭 效果预设",
+                    options=list(effect_presets.keys()),
+                    index=0,
+                    help="选择预设的视觉效果风格，自动智能会根据内容类型推荐最佳效果"
+                )
+                params.effect_preset = effect_presets[selected_preset]
+                
+                # 显示预设说明
+                preset_descriptions = {
+                    "auto": "🤖 根据视频主题智能推荐最佳效果",
+                    "professional": "💼 适合商务演示和专业内容",
+                    "cinematic": "🎬 电影级视觉效果，强烈视觉冲击",
+                    "vintage": "📸 复古温暖的视觉风格",
+                    "modern": "✨ 现代清新的视觉风格", 
+                    "dramatic": "🎪 强烈的戏剧视觉效果"
+                }
+                
+                if params.effect_preset in preset_descriptions:
+                    st.caption(preset_descriptions[params.effect_preset])
+            
+            with effect_col2:
+                # 视频增强级别
+                enhancement_levels = {
+                    "轻度增强": "light",
+                    "中度增强": "medium", 
+                    "强度增强": "strong"
+                }
+                
+                selected_enhancement = st.selectbox(
+                    "⚡ 增强级别",
+                    options=list(enhancement_levels.keys()),
+                    index=1,  # 默认中度增强
+                    help="选择视频增强的强度级别"
+                )
+                params.video_enhancement_level = enhancement_levels[selected_enhancement]
+                
+                # 智能效果推荐
+                params.smart_effects = st.checkbox(
+                    "🧠 智能效果推荐",
+                    value=True,
+                    help="根据视频主题和内容类型自动推荐最佳效果"
+                )
+            
+            # 高级效果选项
+            with st.expander("🔧 高级效果选项", expanded=False):
+                adv_col1, adv_col2 = st.columns(2)
+                
+                with adv_col1:
+                    # 自定义滤镜
+                    custom_filters = {
+                        "无滤镜": "none",
+                        "电影级": "cinematic",
+                        "复古": "vintage", 
+                        "黑白": "black_white",
+                        "棕褐色": "sepia",
+                        "暖色调": "warm",
+                        "冷色调": "cool",
+                        "专业": "professional"
+                    }
+                    
+                    selected_filter = st.selectbox(
+                        "🎨 自定义滤镜",
+                        options=list(custom_filters.keys()),
+                        index=0,
+                        help="选择特定的滤镜效果"
+                    )
+                    params.custom_filter = custom_filters[selected_filter]
+                    
+                    # 滤镜强度
+                    if params.custom_filter != "none":
+                        params.filter_intensity = st.slider(
+                            "🎚️ 滤镜强度",
+                            min_value=0.0,
+                            max_value=1.0,
+                            value=0.5,
+                            step=0.1,
+                            help="调整滤镜效果的强度"
+                        )
+                
+                with adv_col2:
+                    # 动态效果
+                    params.enable_dynamic_effects = st.checkbox(
+                        "🎭 启用动态效果",
+                        value=False,
+                        help="启用缩放、平移等动态视觉效果"
+                    )
+                    
+                    # 转场持续时间
+                    params.transition_duration = st.slider(
+                        "⏱️ 转场持续时间",
+                        min_value=0.5,
+                        max_value=3.0,
+                        value=1.0,
+                        step=0.1,
+                        help="转场效果的持续时间（秒）"
+                    )
+            
+            # 效果预览提示
+            if params.effect_preset != "auto":
+                st.info(f"💡 已选择 '{selected_preset}' 预设，将应用相应的专业视觉效果")
+            else:
+                st.info("🤖 智能模式已启用，将根据您的视频主题自动选择最佳效果")
+        else:
+            st.info("💡 专业效果已禁用，将使用基础的视频处理")
+        
+        st.markdown("---")
+        
         # 视频参数设置
         st.markdown("**⚙️ 视频参数**")
         
@@ -903,7 +1118,9 @@ with middle_panel:
         
         # 视频设置预览
         total_estimated_time = params.video_clip_duration * max(5, len(params.video_terms.split(',')) if params.video_terms else 5)
-        show_status_indicator('info', f'📊 预估视频时长: {total_estimated_time}秒 | 比例: {params.video_aspect.value}')
+        effect_status = "专业效果已启用" if params.enable_professional_effects else "基础模式"
+        preset_info = f" | 预设: {selected_preset}" if params.enable_professional_effects and 'selected_preset' in locals() else ""
+        show_status_indicator('info', f'📊 预估视频时长: {total_estimated_time}秒 | 比例: {params.video_aspect.value} | {effect_status}{preset_info}')
 
         st.markdown("---")
         

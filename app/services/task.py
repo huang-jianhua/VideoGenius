@@ -173,6 +173,7 @@ def generate_final_videos(
             utils.task_dir(task_id), f"combined-{index}.mp4"
         )
         logger.info(f"\n\n## combining video: {index} => {combined_video_path}")
+        
         video.combine_videos(
             combined_video_path=combined_video_path,
             video_paths=downloaded_videos,
@@ -182,6 +183,9 @@ def generate_final_videos(
             video_transition_mode=video_transition_mode,
             max_clip_duration=params.video_clip_duration,
             threads=params.n_threads,
+            video_subject=params.video_subject,
+            enable_professional_effects=params.enable_professional_effects,
+            effect_preset=params.effect_preset,
         )
 
         _progress += 50 / params.video_count / 2

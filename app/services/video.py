@@ -114,6 +114,110 @@ def get_bgm_file(bgm_type: str = "random", bgm_file: str = ""):
     return ""
 
 
+def detect_content_type(video_subject: str) -> str:
+    """根据视频主题检测内容类型，用于智能效果推荐"""
+    subject_lower = video_subject.lower()
+    
+    # 技术类关键词
+    tech_keywords = ['ai', '人工智能', 'python', '编程', '科技', 'tech', 'programming', 'code', '算法', '数据']
+    if any(keyword in subject_lower for keyword in tech_keywords):
+        return "tech"
+    
+    # 生活方式类关键词
+    lifestyle_keywords = ['生活', '健康', '美食', '旅行', 'lifestyle', 'health', 'food', 'travel', '运动', '时尚']
+    if any(keyword in subject_lower for keyword in lifestyle_keywords):
+        return "lifestyle"
+    
+    # 商务类关键词
+    business_keywords = ['商务', '企业', '管理', 'business', 'management', '营销', 'marketing', '金融', '投资']
+    if any(keyword in subject_lower for keyword in business_keywords):
+        return "business"
+    
+    # 创意类关键词
+    creative_keywords = ['艺术', '创意', '设计', 'art', 'creative', 'design', '音乐', 'music', '电影', '摄影']
+    if any(keyword in subject_lower for keyword in creative_keywords):
+        return "creative"
+    
+    return "general"
+
+
+def apply_enhanced_transitions(clip, video_transition_mode, clip_index, total_clips, content_type="general"):
+    """应用增强的转场效果"""
+    try:
+        shuffle_side = random.choice(["left", "right", "top", "bottom"])
+        
+        if video_transition_mode.value == VideoTransitionMode.none.value:
+            # 即使选择无转场，也应用轻微的专业增强
+            clip = video_effects.apply_professional_enhancement(clip, "light")
+            
+        elif video_transition_mode.value == VideoTransitionMode.fade_in.value:
+            clip = video_effects.fadein_transition(clip, 1)
+            # 添加专业增强
+            clip = video_effects.apply_professional_enhancement(clip, "medium")
+            
+        elif video_transition_mode.value == VideoTransitionMode.fade_out.value:
+            clip = video_effects.fadeout_transition(clip, 1)
+            clip = video_effects.apply_professional_enhancement(clip, "medium")
+            
+        elif video_transition_mode.value == VideoTransitionMode.slide_in.value:
+            clip = video_effects.slidein_transition(clip, 1, shuffle_side)
+            clip = video_effects.apply_professional_enhancement(clip, "medium")
+            
+        elif video_transition_mode.value == VideoTransitionMode.slide_out.value:
+            clip = video_effects.slideout_transition(clip, 1, shuffle_side)
+            clip = video_effects.apply_professional_enhancement(clip, "medium")
+            
+        elif video_transition_mode.value == VideoTransitionMode.shuffle.value:
+            # 使用新的专业转场效果
+            enhanced_transitions = [
+                lambda c: video_effects.fadein_transition(c, 1),
+                lambda c: video_effects.fadeout_transition(c, 1),
+                lambda c: video_effects.slidein_transition(c, 1, shuffle_side),
+                lambda c: video_effects.slideout_transition(c, 1, shuffle_side),
+                lambda c: video_effects.zoom_in_transition(c, 1.1, 1),
+                lambda c: video_effects.zoom_out_transition(c, 1.1, 1),
+                lambda c: video_effects.apply_random_filter(c),
+            ]
+            shuffle_transition = random.choice(enhanced_transitions)
+            clip = shuffle_transition(clip)
+            
+            # 应用智能效果
+            clip = video_effects.apply_smart_effects(clip, clip_index, total_clips, content_type)
+        
+        # 根据内容类型应用额外的视觉增强
+        if content_type == "tech":
+            # 技术类内容：现代、清晰、专业
+            clip = video_effects.apply_cinematic_filter(clip, 0.3)
+            clip = video_effects.adjust_contrast(clip, 1.1)
+            
+        elif content_type == "lifestyle":
+            # 生活方式：温暖、自然
+            clip = video_effects.color_temperature_warm(clip, 0.2)
+            clip = video_effects.adjust_brightness(clip, 1.05)
+            
+        elif content_type == "business":
+            # 商务：专业、稳重
+            clip = video_effects.adjust_contrast(clip, 1.05)
+            clip = video_effects.apply_professional_enhancement(clip, "light")
+            
+        elif content_type == "creative":
+            # 创意：艺术、个性
+            clip = video_effects.apply_vintage_filter(clip, 0.3)
+            clip = video_effects.adjust_saturation(clip, 1.1)
+        
+        return clip
+        
+    except Exception as e:
+        logger.warning(f"增强转场效果应用失败，使用基础效果: {e}")
+        # 回退到基础转场效果
+        if video_transition_mode.value == VideoTransitionMode.fade_in.value:
+            return video_effects.fadein_transition(clip, 1)
+        elif video_transition_mode.value == VideoTransitionMode.fade_out.value:
+            return video_effects.fadeout_transition(clip, 1)
+        else:
+            return clip
+
+
 def combine_videos(
     combined_video_path: str,
     video_paths: List[str],
@@ -123,10 +227,18 @@ def combine_videos(
     video_transition_mode: VideoTransitionMode = None,
     max_clip_duration: int = 5,
     threads: int = 2,
+    video_subject: str = "",  # 新增：用于智能效果推荐
+    enable_professional_effects: bool = True,  # 新增：是否启用专业效果
+    effect_preset: str = "auto",  # 新增：效果预设
 ) -> str:
     audio_clip = AudioFileClip(audio_file)
     audio_duration = audio_clip.duration
     logger.info(f"audio duration: {audio_duration} seconds")
+    
+    # 检测内容类型用于智能效果推荐
+    content_type = detect_content_type(video_subject) if video_subject else "general"
+    logger.info(f"detected content type: {content_type}")
+    
     # Required duration of each clip
     req_dur = audio_duration / len(video_paths)
     req_dur = max_clip_duration
@@ -192,27 +304,38 @@ def combine_videos(
                     background = ColorClip(size=(video_width, video_height), color=(0, 0, 0)).with_duration(clip_duration)
                     clip_resized = clip.resized(new_size=(new_width, new_height)).with_position("center")
                     clip = CompositeVideoClip([background, clip_resized])
-                    
-            shuffle_side = random.choice(["left", "right", "top", "bottom"])
-            if video_transition_mode.value == VideoTransitionMode.none.value:
-                clip = clip
-            elif video_transition_mode.value == VideoTransitionMode.fade_in.value:
-                clip = video_effects.fadein_transition(clip, 1)
-            elif video_transition_mode.value == VideoTransitionMode.fade_out.value:
-                clip = video_effects.fadeout_transition(clip, 1)
-            elif video_transition_mode.value == VideoTransitionMode.slide_in.value:
-                clip = video_effects.slidein_transition(clip, 1, shuffle_side)
-            elif video_transition_mode.value == VideoTransitionMode.slide_out.value:
-                clip = video_effects.slideout_transition(clip, 1, shuffle_side)
-            elif video_transition_mode.value == VideoTransitionMode.shuffle.value:
-                transition_funcs = [
-                    lambda c: video_effects.fadein_transition(c, 1),
-                    lambda c: video_effects.fadeout_transition(c, 1),
-                    lambda c: video_effects.slidein_transition(c, 1, shuffle_side),
-                    lambda c: video_effects.slideout_transition(c, 1, shuffle_side),
-                ]
-                shuffle_transition = random.choice(transition_funcs)
-                clip = shuffle_transition(clip)
+            
+            # 🎬 应用增强的转场和视觉效果
+            if enable_professional_effects:
+                # 应用效果预设
+                if effect_preset != "auto" and effect_preset in video_effects.EFFECT_PRESETS:
+                    logger.info(f"applying effect preset: {effect_preset}")
+                    clip = video_effects.apply_preset_effects(clip, effect_preset)
+                else:
+                    # 使用智能效果推荐
+                    clip = apply_enhanced_transitions(clip, video_transition_mode, i, len(subclipped_items), content_type)
+            else:
+                # 使用原有的基础转场效果
+                shuffle_side = random.choice(["left", "right", "top", "bottom"])
+                if video_transition_mode.value == VideoTransitionMode.none.value:
+                    clip = clip
+                elif video_transition_mode.value == VideoTransitionMode.fade_in.value:
+                    clip = video_effects.fadein_transition(clip, 1)
+                elif video_transition_mode.value == VideoTransitionMode.fade_out.value:
+                    clip = video_effects.fadeout_transition(clip, 1)
+                elif video_transition_mode.value == VideoTransitionMode.slide_in.value:
+                    clip = video_effects.slidein_transition(clip, 1, shuffle_side)
+                elif video_transition_mode.value == VideoTransitionMode.slide_out.value:
+                    clip = video_effects.slideout_transition(clip, 1, shuffle_side)
+                elif video_transition_mode.value == VideoTransitionMode.shuffle.value:
+                    transition_funcs = [
+                        lambda c: video_effects.fadein_transition(c, 1),
+                        lambda c: video_effects.fadeout_transition(c, 1),
+                        lambda c: video_effects.slidein_transition(c, 1, shuffle_side),
+                        lambda c: video_effects.slideout_transition(c, 1, shuffle_side),
+                    ]
+                    shuffle_transition = random.choice(transition_funcs)
+                    clip = shuffle_transition(clip)
 
             if clip.duration > max_clip_duration:
                 clip = clip.subclipped(0, max_clip_duration)
@@ -271,8 +394,17 @@ def combine_videos(
             base_clip = VideoFileClip(temp_merged_video)
             next_clip = VideoFileClip(clip.file_path)
             
-            # merge these two clips
-            merged_clip = concatenate_videoclips([base_clip, next_clip])
+            # 🎬 在合并时应用片段间转场效果
+            if enable_professional_effects and video_transition_mode.value == VideoTransitionMode.shuffle.value:
+                # 使用专业的片段间转场
+                try:
+                    merged_clip = video_effects.crossfade_transition(base_clip, next_clip, 0.5)
+                except:
+                    # 如果专业转场失败，使用标准拼接
+                    merged_clip = concatenate_videoclips([base_clip, next_clip])
+            else:
+                # 标准拼接
+                merged_clip = concatenate_videoclips([base_clip, next_clip])
 
             # save merged result to temp file
             merged_clip.write_videofile(
@@ -301,6 +433,40 @@ def combine_videos(
     # clean temp files
     clip_files = [clip.file_path for clip in processed_clips]
     delete_files(clip_files)
+    
+    # 🎬 最终视频后处理
+    if enable_professional_effects:
+        logger.info("applying final video enhancement...")
+        try:
+            final_clip = VideoFileClip(combined_video_path)
+            
+            # 根据内容类型应用最终增强
+            if content_type == "tech":
+                final_clip = video_effects.apply_professional_enhancement(final_clip, "strong")
+            elif content_type in ["lifestyle", "creative"]:
+                final_clip = video_effects.apply_professional_enhancement(final_clip, "medium")
+            else:
+                final_clip = video_effects.apply_professional_enhancement(final_clip, "light")
+            
+            # 保存增强后的视频
+            enhanced_path = f"{output_dir}/enhanced-{os.path.basename(combined_video_path)}"
+            final_clip.write_videofile(
+                enhanced_path,
+                threads=threads,
+                logger=None,
+                temp_audiofile_path=output_dir,
+                audio_codec=audio_codec,
+                fps=fps,
+            )
+            
+            close_clip(final_clip)
+            
+            # 替换原文件
+            os.replace(enhanced_path, combined_video_path)
+            logger.info("final video enhancement completed")
+            
+        except Exception as e:
+            logger.warning(f"final enhancement failed, using original video: {e}")
             
     logger.info("video combining completed")
     return combined_video_path
@@ -376,7 +542,7 @@ def generate_video(
     logger.info(f"  ③ subtitle: {subtitle_path}")
     logger.info(f"  ④ output: {output_file}")
 
-    # https://github.com/harry0703/MoneyPrinterTurbo/issues/217
+    # https://github.com/huang-jianhua/VideoGenius/issues/217
     # PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'final-1.mp4.tempTEMP_MPY_wvf_snd.mp3'
     # write into the same directory as the output file
     output_dir = os.path.dirname(output_file)

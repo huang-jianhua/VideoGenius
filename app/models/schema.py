@@ -64,7 +64,10 @@ class VideoParams(BaseModel):
       "text_color": "#FFFFFF",
       "font_size": 60,
       "stroke_color": "#000000",
-      "stroke_width": 1.5
+      "stroke_width": 1.5,
+      "enable_professional_effects": true,
+      "effect_preset": "auto",
+      "video_enhancement_level": "medium"
     }
     """
 
@@ -103,6 +106,16 @@ class VideoParams(BaseModel):
     stroke_width: float = 1.5
     n_threads: Optional[int] = 2
     paragraph_number: Optional[int] = 1
+    
+    # 🎬 新增：专业级视频效果参数
+    enable_professional_effects: Optional[bool] = True  # 是否启用专业效果
+    effect_preset: Optional[str] = "auto"  # 效果预设：auto, professional, cinematic, vintage, modern, dramatic
+    video_enhancement_level: Optional[str] = "medium"  # 视频增强级别：light, medium, strong
+    smart_effects: Optional[bool] = True  # 是否启用智能效果推荐
+    custom_filter: Optional[str] = "none"  # 自定义滤镜：none, cinematic, vintage, black_white, sepia, warm, cool
+    filter_intensity: Optional[float] = 0.5  # 滤镜强度：0.0-1.0
+    enable_dynamic_effects: Optional[bool] = False  # 是否启用动态效果（缩放、平移等）
+    transition_duration: Optional[float] = 1.0  # 转场持续时间（秒）
 
 
 class SubtitleRequest(BaseModel):
@@ -284,7 +297,7 @@ class BgmRetrieveResponse(BaseResponse):
                         {
                             "name": "output013.mp3",
                             "size": 1891269,
-                            "file": "/MoneyPrinterTurbo/resource/songs/output013.mp3",
+                            "file": "/VideoGenius/resource/songs/output013.mp3",
                         }
                     ]
                 },
@@ -298,6 +311,6 @@ class BgmUploadResponse(BaseResponse):
             "example": {
                 "status": 200,
                 "message": "success",
-                "data": {"file": "/MoneyPrinterTurbo/resource/songs/example.mp3"},
+                "data": {"file": "/VideoGenius/resource/songs/example.mp3"},
             },
         }

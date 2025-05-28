@@ -1,13 +1,13 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim
 
 # Set the working directory in the container
-WORKDIR /MoneyPrinterTurbo
+WORKDIR /VideoGenius
 
-# 设置/MoneyPrinterTurbo目录权限为777
-RUN chmod 777 /MoneyPrinterTurbo
+# 设置/VideoGenius目录权限为777
+RUN chmod 777 /VideoGenius
 
-ENV PYTHONPATH="/MoneyPrinterTurbo"
+ENV PYTHONPATH="/VideoGenius"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -35,10 +35,10 @@ EXPOSE 8501
 CMD ["streamlit", "run", "./webui/Main.py","--browser.serverAddress=127.0.0.1","--server.enableCORS=True","--browser.gatherUsageStats=False"]
 
 # 1. Build the Docker image using the following command
-# docker build -t moneyprinterturbo .
+# docker build -t videogenius .
 
 # 2. Run the Docker container using the following command
 ## For Linux or MacOS:
-# docker run -v $(pwd)/config.toml:/MoneyPrinterTurbo/config.toml -v $(pwd)/storage:/MoneyPrinterTurbo/storage -p 8501:8501 moneyprinterturbo
+# docker run -v $(pwd)/config.toml:/VideoGenius/config.toml -v $(pwd)/storage:/VideoGenius/storage -p 8501:8501 videogenius
 ## For Windows:
-# docker run -v ${PWD}/config.toml:/MoneyPrinterTurbo/config.toml -v ${PWD}/storage:/MoneyPrinterTurbo/storage -p 8501:8501 moneyprinterturbo
+# docker run -v ${PWD}/config.toml:/VideoGenius/config.toml -v ${PWD}/storage:/VideoGenius/storage -p 8501:8501 videogenius

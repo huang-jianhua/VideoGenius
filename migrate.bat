@@ -1,9 +1,9 @@
 @echo off
-chcp 65001 > nul
-title MoneyPrinterTurbo 项目迁移工具
+title VideoGenius 项目迁移工具
+chcp 65001 >nul
 
 echo ========================================
-echo   MoneyPrinterTurbo 项目迁移工具
+echo   VideoGenius 项目迁移工具
 echo ========================================
 echo.
 
