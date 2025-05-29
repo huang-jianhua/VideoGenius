@@ -227,7 +227,14 @@ def apply_sharpen_filter(clip: Clip, intensity: float = 1.0) -> Clip:
 def adjust_brightness(clip: Clip, factor: float = 1.2) -> Clip:
     """调整亮度"""
     try:
-        return clip.with_effects([vfx.Gamma(1/factor)])
+        # 使用更兼容的方式调整亮度
+        def brightness_effect(get_frame, t):
+            frame = get_frame(t)
+            # 简单的亮度调整：将像素值乘以因子，但限制在0-255范围内
+            brightened = np.clip(frame * factor, 0, 255).astype(np.uint8)
+            return brightened
+        
+        return clip.with_fps(clip.fps).with_duration(clip.duration).with_make_frame(brightness_effect)
     except Exception as e:
         logger.warning(f"亮度调整失败: {e}")
         return clip
@@ -236,7 +243,14 @@ def adjust_brightness(clip: Clip, factor: float = 1.2) -> Clip:
 def adjust_contrast(clip: Clip, factor: float = 1.2) -> Clip:
     """调整对比度"""
     try:
-        return clip.with_effects([vfx.ColorX(factor)])
+        # 使用更兼容的方式调整对比度
+        def contrast_effect(get_frame, t):
+            frame = get_frame(t)
+            # 对比度调整：(像素值 - 128) * 因子 + 128
+            contrasted = np.clip((frame.astype(float) - 128) * factor + 128, 0, 255).astype(np.uint8)
+            return contrasted
+        
+        return clip.with_fps(clip.fps).with_duration(clip.duration).with_make_frame(contrast_effect)
     except Exception as e:
         logger.warning(f"对比度调整失败: {e}")
         return clip
@@ -245,8 +259,19 @@ def adjust_contrast(clip: Clip, factor: float = 1.2) -> Clip:
 def adjust_saturation(clip: Clip, factor: float = 1.2) -> Clip:
     """调整饱和度"""
     try:
-        # 通过色彩矩阵调整饱和度
-        return clip.with_effects([vfx.ColorX(factor)])
+        # 使用更兼容的方式调整饱和度
+        def saturation_effect(get_frame, t):
+            frame = get_frame(t)
+            # 简单的饱和度调整：保持亮度，增强色彩
+            if len(frame.shape) == 3 and frame.shape[2] == 3:
+                # RGB图像
+                gray = np.dot(frame, [0.299, 0.587, 0.114])
+                gray = np.stack([gray, gray, gray], axis=2)
+                saturated = np.clip(gray + (frame - gray) * factor, 0, 255).astype(np.uint8)
+                return saturated
+            return frame
+        
+        return clip.with_fps(clip.fps).with_duration(clip.duration).with_make_frame(saturation_effect)
     except Exception as e:
         logger.warning(f"饱和度调整失败: {e}")
         return clip
@@ -255,8 +280,17 @@ def adjust_saturation(clip: Clip, factor: float = 1.2) -> Clip:
 def color_temperature_warm(clip: Clip, intensity: float = 0.3) -> Clip:
     """暖色调调整"""
     try:
-        # 增加红色和黄色通道
-        return clip.with_effects([vfx.ColorX(1 + intensity * 0.1)])
+        def warm_effect(get_frame, t):
+            frame = get_frame(t)
+            if len(frame.shape) == 3 and frame.shape[2] == 3:
+                # 增加红色和黄色通道
+                warmed = frame.copy().astype(float)
+                warmed[:, :, 0] = np.clip(warmed[:, :, 0] * (1 + intensity * 0.3), 0, 255)  # 红色
+                warmed[:, :, 1] = np.clip(warmed[:, :, 1] * (1 + intensity * 0.1), 0, 255)  # 绿色
+                return warmed.astype(np.uint8)
+            return frame
+        
+        return clip.with_fps(clip.fps).with_duration(clip.duration).with_make_frame(warm_effect)
     except Exception as e:
         logger.warning(f"暖色调调整失败: {e}")
         return clip
@@ -265,8 +299,17 @@ def color_temperature_warm(clip: Clip, intensity: float = 0.3) -> Clip:
 def color_temperature_cool(clip: Clip, intensity: float = 0.3) -> Clip:
     """冷色调调整"""
     try:
-        # 增加蓝色通道
-        return clip.with_effects([vfx.ColorX(1 - intensity * 0.1)])
+        def cool_effect(get_frame, t):
+            frame = get_frame(t)
+            if len(frame.shape) == 3 and frame.shape[2] == 3:
+                # 增加蓝色通道
+                cooled = frame.copy().astype(float)
+                cooled[:, :, 2] = np.clip(cooled[:, :, 2] * (1 + intensity * 0.3), 0, 255)  # 蓝色
+                cooled[:, :, 0] = np.clip(cooled[:, :, 0] * (1 - intensity * 0.1), 0, 255)  # 减少红色
+                return cooled.astype(np.uint8)
+            return frame
+        
+        return clip.with_fps(clip.fps).with_duration(clip.duration).with_make_frame(cool_effect)
     except Exception as e:
         logger.warning(f"冷色调调整失败: {e}")
         return clip

@@ -99,9 +99,6 @@ def delete_files(files: List[str] | str):
             pass
 
 def get_bgm_file(bgm_type: str = "random", bgm_file: str = ""):
-    if not bgm_type:
-        return ""
-
     if bgm_file and os.path.exists(bgm_file):
         return bgm_file
 
@@ -109,7 +106,11 @@ def get_bgm_file(bgm_type: str = "random", bgm_file: str = ""):
         suffix = "*.mp3"
         song_dir = utils.song_dir()
         files = glob.glob(os.path.join(song_dir, suffix))
-        return random.choice(files)
+        if files:
+            return random.choice(files)
+        else:
+            logger.warning(f"No audio files found in {song_dir}")
+            return ""
 
     return ""
 
