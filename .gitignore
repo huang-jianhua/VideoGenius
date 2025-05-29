@@ -82,4 +82,28 @@ models/
 *.log
 
 # 敏感信息文件
-AI助手记忆存储.md 
+AI助手记忆存储.md
+
+# 存储文件和缓存
+storage/
+backups/
+backup_*/
+
+# 大字体文件
+*.ttc
+STHeitiLight.ttc
+STHeitiMedium.ttc
+
+# 视频文件
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# 音频文件
+*.mp3
+*.wav
+*.aac
+
+# 避免嵌套仓库
+VideoGenius/ 
