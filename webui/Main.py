@@ -107,6 +107,14 @@ with nav_col1:
         "📚 模板库": "template_library", 
         "🔄 批量处理": "batch_processor",
         "📤 导出优化": "export_optimizer",
+        "🔍 AI视觉分析": "ai_vision_analysis",
+        "🎤 智能配音": "smart_voice_system",
+        "📝 智能字幕": "smart_subtitle_system",
+        "🎨 AI创意助手": "ai_creative_assistant",
+        "👥 团队协作": "team_collaboration",
+        "🏢 企业管理": "enterprise_management",
+        "🔌 API集成": "api_integration",
+        "🛡️ 企业安全": "enterprise_security",
         tr("Configuration Management"): "config",
         "🤖 AI模型管理": "model_management"
     }
@@ -282,6 +290,134 @@ elif st.session_state["current_page"] == "export_optimizer":
             st.exception(e)
     
     # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "ai_vision_analysis":
+    # 显示AI视觉分析页面
+    try:
+        from webui.pages.ai_vision_analysis import main as ai_vision_analysis_main
+        ai_vision_analysis_main()
+    except ImportError as e:
+        st.error(f"❌ AI视觉分析页面加载失败: {str(e)}")
+        st.info("💡 AI视觉分析系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ AI视觉分析页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "smart_voice_system":
+    # 显示智能配音系统页面
+    try:
+        from webui.pages.smart_voice_system import main as smart_voice_system_main
+        smart_voice_system_main()
+    except ImportError as e:
+        st.error(f"❌ 智能配音系统页面加载失败: {str(e)}")
+        st.info("💡 智能配音系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 智能配音系统页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "smart_subtitle_system":
+    # 显示智能字幕系统页面
+    try:
+        from webui.pages.smart_subtitle_system import main as smart_subtitle_system_main
+        smart_subtitle_system_main()
+    except ImportError as e:
+        st.error(f"❌ 智能字幕系统页面加载失败: {str(e)}")
+        st.info("💡 智能字幕系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 智能字幕系统页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "ai_creative_assistant":
+    # 显示AI创意助手页面
+    try:
+        from webui.pages.ai_creative_assistant import main as ai_creative_assistant_main
+        ai_creative_assistant_main()
+    except ImportError as e:
+        st.error(f"❌ AI创意助手页面加载失败: {str(e)}")
+        st.info("💡 AI创意助手系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ AI创意助手页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "team_collaboration":
+    # 显示团队协作页面
+    try:
+        from webui.pages.team_collaboration import main as team_collaboration_main
+        team_collaboration_main()
+    except ImportError as e:
+        st.error(f"❌ 团队协作页面加载失败: {str(e)}")
+        st.info("💡 团队协作系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 团队协作页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 企业级功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "enterprise_management":
+    # 显示企业管理页面
+    try:
+        from webui.pages.enterprise_management import main as enterprise_management_main
+        enterprise_management_main()
+    except ImportError as e:
+        st.error(f"❌ 企业管理页面加载失败: {str(e)}")
+        st.info("💡 企业管理系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 企业管理页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 企业级功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "api_integration":
+    # 显示API集成页面
+    try:
+        from webui.pages.api_integration import main as api_integration_main
+        api_integration_main()
+    except ImportError as e:
+        st.error(f"❌ API集成页面加载失败: {str(e)}")
+        st.info("💡 API集成系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ API集成页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 企业级功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "enterprise_security":
+    # 显示企业安全页面
+    try:
+        from webui.pages.enterprise_security import main as enterprise_security_main
+        enterprise_security_main()
+    except ImportError as e:
+        st.error(f"❌ 企业安全页面加载失败: {str(e)}")
+        st.info("💡 企业安全系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ 企业安全页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 企业级功能页面不需要显示后续的视频生成界面
     st.stop()
 
 # 如果是主页面，继续显示原有的视频生成界面

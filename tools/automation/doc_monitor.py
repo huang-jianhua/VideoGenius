@@ -244,14 +244,14 @@ class DocumentMonitor:
         self.project_root = Path(project_root)
         self.docs_path = self.project_root / "docs"
         self.status_file = self.docs_path / "项目状态总览.md"
-        self.memory_file = self.project_root / "AI助手记忆存储.md"
+        self.memory_file = self.project_root / "docs" / "ai_assistant" / "AI助手记忆存储.md"
         
         # 核心文档列表 - 这些文档需要重点监控
         self.core_documents = [
-            "AI助手记忆存储.md",
+            "docs/ai_assistant/AI助手记忆存储.md",
             "docs/ai_assistant/AI助手承诺追踪系统.md",  # 🚨 新增：承诺追踪最高优先级
             "README.md",
-            "VideoGenius全面发展计划.md",
+            "docs/development/VideoGenius全面发展计划.md",
             "docs/管理规范/项目状态总览.md",
             "docs/user/启动说明.md",
             "docs/user/智能启动工具使用说明.md",
@@ -433,7 +433,7 @@ class MemoryBackupSystem:
     
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
-        self.memory_file = self.project_root / "AI助手记忆存储.md"
+        self.memory_file = self.project_root / "docs" / "ai_assistant" / "AI助手记忆存储.md"
         self.backup_dir = self.project_root / "backups" / "ai_memory"
     
     def backup_ai_memory(self):

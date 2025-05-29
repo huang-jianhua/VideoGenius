@@ -10,16 +10,13 @@ backup_interval = 86400  # 每天备份一次
 # 监控的文档列表
 monitored_docs = [
     "README.md",
-    "README-en.md", 
-    "启动说明.md",
-    "本地素材使用说明.md",
-    "智能启动工具使用说明.md",
-    "AI助手记忆存储.md",
-    "记忆恢复指南.md",
-    "docs/项目状态总览.md",
-    "docs/AI助手快速上手指南.md",
-    "docs/文档框架和约定.md",
-    "docs/文档索引.md"
+    "docs/development/VideoGenius全面发展计划.md",
+    "docs/管理规范/项目状态总览.md",
+    "docs/user/启动说明.md",
+    "docs/user/智能启动工具使用说明.md",
+    "docs/ai_assistant/记忆恢复指南.md",
+    "docs/ai_assistant/AI助手承诺追踪系统.md",
+    "docs/ai_assistant/AI助手记忆存储.md"
 ]
 
 [quality]
