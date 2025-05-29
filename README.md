@@ -1,4 +1,16 @@
-# 🎬 VideoGenius - 专业级AI视频生成工具
+# 📦 VideoGenius Legacy Archive
+
+> ⚠️ **此仓库为历史归档版本** ⚠️  
+> 
+> 这个仓库包含了VideoGenius项目的完整开发历史，但由于历史包袱导致仓库体积过大(600MB+)。
+> 
+> **🎯 最新版本请访问**: [VideoGenius](https://github.com/huang-jianhua/VideoGenius)  
+> **📅 归档时间**: 2025年5月29日  
+> **📊 归档原因**: 清理大文件，减少仓库体积  
+> 
+> ---
+
+# 🎬 VideoGenius - AI视频内容创作平台
 
 > **全球最先进的AI视频生成平台，现已支持专业级视频效果！**
 
