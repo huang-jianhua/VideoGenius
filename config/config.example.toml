@@ -1,33 +1,33 @@
 [app]
 video_source = "pexels"
 hide_config = true
-pexels_api_keys = [ "0tYsH37cSSMfRqdbaPKx7tigQkwxmp8TRj40yvOKVVID1nHq6hSiy1vM",]
+pexels_api_keys = [ "your_pexels_api_key_here",]
 pixabay_api_keys = []
-llm_provider = "claude"
+llm_provider = "deepseek"
 pollinations_api_key = ""
 pollinations_base_url = "https://pollinations.ai/api/v1"
 pollinations_model_name = "openai-fast"
 ollama_base_url = "http://localhost:11434/v1"
 ollama_model_name = "qwen:7b"
-openai_api_key = "sk-ktuflbyyozyoyrznigqkutyiwqhdpttsarpesiahxmwkikvz"
+openai_api_key = "your_openai_api_key_here"
 openai_base_url = "https://api.siliconflow.cn/v1"
 openai_model_name = "Pro/deepseek-ai/DeepSeek-V3"
-moonshot_api_key = ""
+moonshot_api_key = "your_moonshot_api_key_here"
 moonshot_base_url = "https://api.moonshot.cn/v1"
 moonshot_model_name = "moonshot-v1-8k"
 oneapi_api_key = ""
 oneapi_base_url = ""
 oneapi_model_name = ""
 g4f_model_name = "gpt-3.5-turbo"
-azure_api_key = ""
+azure_api_key = "your_azure_api_key_here"
 azure_base_url = ""
 azure_model_name = "gpt-35-turbo"
 azure_api_version = "2024-02-15-preview"
-gemini_api_key = ""
+gemini_api_key = "your_gemini_api_key_here"
 gemini_model_name = "gemini-1.0-pro"
-qwen_api_key = ""
+qwen_api_key = "your_qwen_api_key_here"
 qwen_model_name = "qwen-max"
-deepseek_api_key = ""
+deepseek_api_key = "your_deepseek_api_key_here"
 deepseek_base_url = "https://api.deepseek.com"
 deepseek_model_name = "deepseek-chat"
 subtitle_provider = "edge"
@@ -51,17 +51,17 @@ compute_type = "int8"
 [proxy]
 
 [azure]
-speech_key = ""
-speech_region = ""
+speech_key = "your_azure_speech_key_here"
+speech_region = "your_azure_region_here"
 
 [siliconflow]
-api_key = ""
+api_key = "your_siliconflow_api_key_here"
 
 [ui]
 hide_log = false
 language = "zh"
 tts_server = "azure-tts-v1"
 voice_name = "zh-CN-XiaoxiaoNeural-Female"
-font_name = "MicrosoftYaHeiBold.ttc"
+font_name = "Charm-Bold.ttf"
 text_fore_color = "#FFFFFF"
 font_size = 63
