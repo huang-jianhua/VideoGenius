@@ -141,3 +141,74 @@ VideoGenius/
 ---
 
 **🎬 VideoGenius - 让AI视频创作变得简单而专业！**
+
+## 🛡️ 安全部署指南
+
+### ⚠️ 重要安全警告
+
+**如果您计划将VideoGenius部署到互联网，请务必注意以下安全风险：**
+
+#### 🚨 主要风险
+1. **API密钥泄露**：所有访问者都能使用您的API密钥
+2. **费用风险**：可能产生巨额API调用费用
+3. **配置冲突**：多用户同时使用会导致设置混乱
+4. **数据泄露**：用户生成的内容可能被其他人看到
+
+#### 🔐 解决方案
+
+##### 方案1：本地部署（推荐）
+```bash
+# 仅在本地网络使用
+streamlit run webui/Main.py --server.address 127.0.0.1
+```
+
+##### 方案2：启用访问控制
+```bash
+# 启动应用后，在侧边栏找到"访问控制设置"
+# 默认管理员账户：admin / admin123
+# ⚠️ 部署前请务必修改默认密码！
+```
+
+##### 方案3：环境变量配置
+```bash
+# 设置API密钥为环境变量（推荐生产环境）
+export VIDEOGENIUS_APP_DEEPSEEK_API_KEY="your_key"
+export VIDEOGENIUS_APP_PEXELS_API_KEYS="your_key"
+export VIDEOGENIUS_AZURE_SPEECH_KEY="your_key"
+export VIDEOGENIUS_PRODUCTION="true"
+
+# 启动应用
+streamlit run webui/Main.py
+```
+
+##### 方案4：Docker部署
+```dockerfile
+FROM python:3.9-slim
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . /app
+WORKDIR /app
+
+# 设置环境变量
+ENV VIDEOGENIUS_PRODUCTION=true
+
+CMD ["streamlit", "run", "webui/Main.py", "--server.address", "0.0.0.0"]
+```
+
+### 🔒 生产环境最佳实践
+
+1. **启用访问控制**：使用内置认证系统
+2. **环境变量**：将API密钥设置为环境变量
+3. **反向代理**：使用Nginx添加额外认证层
+4. **监控费用**：定期检查API使用量和费用
+5. **定期清理**：自动清理临时文件和过期数据
+6. **备份配置**：定期备份重要配置文件
+
+### 💡 推荐使用场景
+
+- ✅ **个人创作者**：完美适用
+- ✅ **小团队轮流使用**：可接受
+- ❌ **多人同时在线**：不推荐（技术限制）
+- ❌ **公开互联网访问**：需要额外安全措施
