@@ -342,11 +342,16 @@ class APIIntegrationSystem:
 
 def render_api_integration_page():
     """渲染API和集成系统页面"""
+# 页面配置 - 只有当页面直接运行时才设置
+try:
     st.set_page_config(
         page_title="API和集成 - VideoGenius",
         page_icon="🔌",
         layout="wide"
     )
+except st.errors.StreamlitAPIException:
+    # 页面配置已经设置过了（通过Main.py），跳过
+    pass
     
     # 初始化系统
     if 'api_system' not in st.session_state:

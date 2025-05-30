@@ -285,11 +285,17 @@ class TeamCollaborationSystem:
 
 def render_team_collaboration_page():
     """渲染团队协作系统页面"""
+# 页面配置 - 只有当页面直接运行时才设置
+try:
     st.set_page_config(
-        page_title="团队协作系统 - VideoGenius",
+        page_title="团队协作 - VideoGenius",
         page_icon="👥",
-        layout="wide"
+        layout="wide",
+        initial_sidebar_state="expanded"
     )
+except st.errors.StreamlitAPIException:
+    # 页面配置已经设置过了（通过Main.py），跳过
+    pass
     
     # 初始化系统
     if 'team_system' not in st.session_state:

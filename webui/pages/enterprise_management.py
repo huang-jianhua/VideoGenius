@@ -366,11 +366,17 @@ class EnterpriseManagementSystem:
 
 def render_enterprise_management_page():
     """渲染企业级管理系统页面"""
+# 页面配置 - 只有当页面直接运行时才设置
+try:
     st.set_page_config(
-        page_title="企业级管理 - VideoGenius",
+        page_title="企业管理 - VideoGenius",
         page_icon="🏢",
-        layout="wide"
+        layout="wide",
+        initial_sidebar_state="expanded"
     )
+except st.errors.StreamlitAPIException:
+    # 页面配置已经设置过了（通过Main.py），跳过
+    pass
     
     # 初始化系统
     if 'enterprise_system' not in st.session_state:

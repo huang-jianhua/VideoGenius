@@ -591,11 +591,17 @@ def render_batch_statistics():
 
 def main():
     """主函数"""
+# 页面配置 - 只有当页面直接运行时才设置
+try:
     st.set_page_config(
-        page_title="VideoGenius 批量处理",
-        page_icon="🔄",
-        layout="wide"
+        page_title="批量处理器 - VideoGenius",
+        page_icon="⚡",
+        layout="wide",
+        initial_sidebar_state="expanded"
     )
+except st.errors.StreamlitAPIException:
+    # 页面配置已经设置过了（通过Main.py），跳过
+    pass
     
     # 页面标题
     st.title("🔄 VideoGenius 批量处理系统")

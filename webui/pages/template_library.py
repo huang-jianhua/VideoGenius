@@ -404,11 +404,17 @@ template_system = TemplateLibrarySystem()
 
 def main():
     """主函数"""
+# 页面配置 - 只有当页面直接运行时才设置
+try:
     st.set_page_config(
-        page_title="VideoGenius 模板库",
+        page_title="模板库 - VideoGenius",
         page_icon="📚",
-        layout="wide"
+        layout="wide",
+        initial_sidebar_state="expanded"
     )
+except st.errors.StreamlitAPIException:
+    # 页面配置已经设置过了（通过Main.py），跳过
+    pass
     
     # 页面标题
     st.title("📚 VideoGenius 模板库系统")

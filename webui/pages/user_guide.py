@@ -412,11 +412,16 @@ class UserGuideSystem:
 
 def main():
     """主函数"""
+# 页面配置 - 只有当页面直接运行时才设置
+try:
     st.set_page_config(
         page_title="VideoGenius 智能向导",
         page_icon="🎓",
         layout="wide"
     )
+except st.errors.StreamlitAPIException:
+    # 页面配置已经设置过了（通过Main.py），跳过
+    pass
     
     # 初始化向导系统
     if 'guide_system' not in st.session_state:

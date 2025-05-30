@@ -23,13 +23,17 @@ import base64
 from io import BytesIO
 from PIL import Image
 
-# 页面配置
-st.set_page_config(
-    page_title="AI视觉分析系统 - VideoGenius",
-    page_icon="🔍",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# 页面配置 - 只有当页面直接运行时才设置
+try:
+    st.set_page_config(
+        page_title="AI视觉分析系统 - VideoGenius",
+        page_icon="🔍",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+except st.errors.StreamlitAPIException:
+    # 页面配置已经设置过了（通过Main.py），跳过
+    pass
 
 # 自定义CSS样式
 st.markdown("""

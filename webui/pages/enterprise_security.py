@@ -340,11 +340,17 @@ class EnterpriseSecuritySystem:
 
 def render_enterprise_security_page():
     """渲染企业级安全系统页面"""
-    st.set_page_config(
-        page_title="企业级安全 - VideoGenius",
-        page_icon="🛡️",
-        layout="wide"
-    )
+    # 页面配置 - 只有当页面直接运行时才设置
+    try:
+        st.set_page_config(
+            page_title="企业安全 - VideoGenius",
+            page_icon="🛡️",
+            layout="wide",
+            initial_sidebar_state="expanded"
+        )
+    except st.errors.StreamlitAPIException:
+        # 页面配置已经设置过了（通过Main.py），跳过
+        pass
     
     # 初始化系统
     if 'security_system' not in st.session_state:
