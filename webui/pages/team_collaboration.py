@@ -336,7 +336,7 @@ except st.errors.StreamlitAPIException:
     current_user = team_system.get_current_user()
     if not current_user:
         st.error("❌ 请先登录")
-        return
+        st.stop()
     
     # 标签页
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
