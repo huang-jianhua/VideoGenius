@@ -78,7 +78,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto",
     menu_items={
-        "Get Help": "https://harryai.cc",
+        "Get Help": "https://github.com/huang-jianhua/VideoGenius",
         "Report a bug": "https://github.com/huang-jianhua/VideoGenius/issues",
         "About": tr("About"),
     },
