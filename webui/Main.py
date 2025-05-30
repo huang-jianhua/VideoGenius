@@ -14,6 +14,16 @@ if root_dir not in sys.path:
     print(sys.path)
     print("")
 
+# 🔐 导入访问控制模块
+try:
+    from webui.auth import require_auth, show_auth_status
+    # 在应用开始前检查认证
+    if not require_auth():
+        st.stop()
+except ImportError:
+    # 如果认证模块不存在，继续正常运行
+    def show_auth_status(): pass
+
 # 导入现代化样式模块
 try:
     from webui.styles import (
@@ -86,6 +96,9 @@ st.set_page_config(
 
 # 🎨 应用现代化主题
 apply_modern_theme()
+
+# 🔐 显示认证状态
+show_auth_status()
 
 # 🚀 创建英雄区域（替代原来的简单标题）
 create_hero_section()
