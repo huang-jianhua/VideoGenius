@@ -73,7 +73,7 @@ class VideoParams(BaseModel):
 
     video_subject: str
     video_script: str = ""  # Script used to generate the video
-    video_terms: Optional[str | list] = None  # Keywords used to generate the video
+    video_terms: Optional[Union[str, list]] = None  # Keywords used to generate the video
     video_aspect: Optional[VideoAspect] = VideoAspect.portrait.value
     video_concat_mode: Optional[VideoConcatMode] = VideoConcatMode.random.value
     video_transition_mode: Optional[VideoTransitionMode] = None
@@ -116,6 +116,14 @@ class VideoParams(BaseModel):
     filter_intensity: Optional[float] = 0.5  # 滤镜强度：0.0-1.0
     enable_dynamic_effects: Optional[bool] = False  # 是否启用动态效果（缩放、平移等）
     transition_duration: Optional[float] = 1.0  # 转场持续时间（秒）
+
+    # 🎨 新增：AI素材生成参数
+    ai_material_enabled: Optional[bool] = False  # 是否启用AI素材生成
+    ai_material_style: Optional[str] = "realistic"  # AI生成风格：realistic, cartoon, minimalist, cinematic, artistic
+    ai_material_count: Optional[int] = 5  # AI生成素材数量
+    ai_image_provider: Optional[str] = "kolors"  # AI图片生成提供商：kolors, dalle3, stability
+    ai_material_quality: Optional[str] = "high"  # 生成质量：standard, high, ultra
+    ai_style_consistency: Optional[bool] = True  # 是否保持风格一致性
 
 
 class SubtitleRequest(BaseModel):

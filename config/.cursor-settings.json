@@ -1,17 +1,20 @@
 {
   "agent": {
-    "maxExecutions": 150,
-    "executionTimeout": 900000,
+    "maxExecutions": 200,
+    "executionTimeout": 1200000,
     "autoConfirm": false,
     "continueOnError": true,
-    "maxRetries": 5,
-    "batchSize": 10
+    "maxRetries": 8,
+    "batchSize": 15,
+    "adaptiveExecution": true
   },
   "ai": {
-    "maxTokens": 16384,
-    "temperature": 0.1,
-    "contextWindow": 64000,
-    "model": "claude-3.5-sonnet"
+    "maxTokens": 32768,
+    "temperature": 0.05,
+    "contextWindow": 128000,
+    "model": "claude-4-sonnet",
+    "systemPrompt": "你是VideoGenius项目的AI助手，具有20年产品经理和工程师经验。严格遵循企业级开发标准，主动完成工作而不需要用户多次推动。每次执行前必须进行任务复杂度评估和风险分析。",
+    "fallbackStrategies": ["simplify_approach", "break_into_steps", "request_clarification"]
   },
   "workspace": {
     "autoSave": true,
@@ -22,14 +25,16 @@
       "*.pyc",
       "__pycache__/*",
       ".git/*"
-    ]
+    ],
+    "backupBeforeChanges": true
   },
   "python": {
     "defaultInterpreter": "python",
     "enableLinting": true,
     "enableFormatting": true,
     "formatter": "black",
-    "linter": "flake8"
+    "linter": "flake8",
+    "testRunner": "pytest"
   },
   "streamlit": {
     "autoReload": true,
@@ -40,6 +45,111 @@
     "developmentMode": true,
     "debugLevel": "INFO",
     "autoBackup": true,
-    "testMode": false
+    "testMode": false,
+    "workflow": {
+      "taskComplexityAssessment": {
+        "enabled": true,
+        "levels": {
+          "simple": "单文件修改，<50行代码",
+          "medium": "多文件修改，50-200行代码",
+          "complex": "架构变更，>200行代码",
+          "critical": "核心功能重构"
+        },
+        "adaptiveFlow": true
+      },
+      "mandatoryConfirmation": {
+        "enabled": true,
+        "triggers": [
+          "complex_tasks",
+          "file_deletions",
+          "architecture_changes",
+          "user_requirement_ambiguity"
+        ]
+      },
+      "preTaskRequirements": [
+        "评估任务复杂度和风险等级",
+        "检查执行记忆系统状态",
+        "验证项目文档完整性",
+        "明确任务优先级(P0/P1/P2/P3)",
+        "定义具体交付物和验收标准",
+        "识别潜在依赖和阻塞点"
+      ],
+      "postTaskRequirements": [
+        "验证功能完整性和正确性",
+        "更新执行记忆系统",
+        "同步更新技术文档",
+        "执行质量检查清单",
+        "进行执行反思和改进建议",
+        "规划下一步行动计划"
+      ],
+      "codeQualityStandards": {
+        "enterpriseLevel": true,
+        "errorHandling": "comprehensive_with_logging",
+        "logging": "structured_with_context",
+        "documentation": "complete_with_examples",
+        "design": "solid_principles",
+        "performance": "optimized_and_monitored",
+        "security": "validated",
+        "testing": "unit_and_integration"
+      },
+      "riskMitigation": {
+        "autoBackupBeforeChanges": true,
+        "incrementalImplementation": true,
+        "rollbackStrategy": "git_based",
+        "testingRequired": true,
+        "codeReview": "self_check"
+      },
+      "userCommunication": {
+        "progressUpdates": "real_time",
+        "clarificationRequests": "proactive",
+        "explanationLevel": "beginner_friendly",
+        "confirmationRequired": "for_critical_changes"
+      },
+      "executionFlow": {
+        "simple": [
+          "快速评估 → 直接执行 → 验证结果"
+        ],
+        "medium": [
+          "详细分析 → 分步执行 → 阶段验证 → 整体测试"
+        ],
+        "complex": [
+          "深度分析 → 架构设计 → 分模块实现 → 集成测试 → 用户验收"
+        ],
+        "critical": [
+          "风险评估 → 用户确认 → 备份现状 → 分阶段实施 → 全面测试 → 渐进部署"
+        ]
+      },
+      "qualityGates": [
+        "代码符合PEP8和企业标准",
+        "所有函数都有完整docstring和类型注解",
+        "错误处理覆盖所有异常场景",
+        "日志记录包含上下文信息",
+        "性能满足预期指标",
+        "安全性通过检查",
+        "单元测试覆盖率>80%",
+        "集成测试通过",
+        "用户体验符合预期"
+      ]
+    },
+    "memorySystem": {
+      "enabled": true,
+      "filePath": "docs/ai_assistant/AI素材生成功能-执行记忆系统.md",
+      "autoUpdate": true,
+      "backupPath": "docs/ai_assistant/memory_backup/",
+      "fallbackStrategy": "create_new_if_missing"
+    },
+    "userProfile": {
+      "level": "beginner",
+      "role": "product_owner",
+      "communicationStyle": "simple_explanations_with_examples",
+      "needsGuidance": true,
+      "preferredFeedbackStyle": "step_by_step_with_reasoning"
+    },
+    "selfImprovement": {
+      "enabled": true,
+      "learningFromFailures": true,
+      "adaptiveStrategies": true,
+      "performanceTracking": true
+    }
   }
 }

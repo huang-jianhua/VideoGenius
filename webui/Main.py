@@ -124,6 +124,7 @@ with nav_col1:
         "🎤 智能配音": "smart_voice_system",
         "📝 智能字幕": "smart_subtitle_system",
         "🎨 AI创意助手": "ai_creative_assistant",
+        "🎬 AI素材生成": "ai_material_generator",
         "👥 团队协作": "team_collaboration",
         "🏢 企业管理": "enterprise_management",
         "🔌 API集成": "api_integration",
@@ -363,6 +364,22 @@ elif st.session_state["current_page"] == "ai_creative_assistant":
         st.info("💡 AI创意助手系统正在加载中...")
     except Exception as e:
         st.error(f"❌ AI创意助手页面运行错误: {str(e)}")
+        with st.expander("查看详细错误信息"):
+            st.exception(e)
+    
+    # 新功能页面不需要显示后续的视频生成界面
+    st.stop()
+
+elif st.session_state["current_page"] == "ai_material_generator":
+    # 显示AI素材生成器页面
+    try:
+        from webui.pages.ai_material_generator import main as ai_material_generator_main
+        ai_material_generator_main()
+    except ImportError as e:
+        st.error(f"❌ AI素材生成器页面加载失败: {str(e)}")
+        st.info("💡 AI素材生成器系统正在加载中...")
+    except Exception as e:
+        st.error(f"❌ AI素材生成器页面运行错误: {str(e)}")
         with st.expander("查看详细错误信息"):
             st.exception(e)
     
@@ -1025,6 +1042,7 @@ with middle_panel:
             (tr("Pexels"), "pexels"),
             (tr("Pixabay"), "pixabay"),
             (tr("Local file"), "local"),
+            ("🎨 AI智能生成", "ai_generated"),
             (tr("TikTok"), "douyin"),
             (tr("Bilibili"), "bilibili"),
             (tr("Xiaohongshu"), "xiaohongshu"),
@@ -1056,6 +1074,87 @@ with middle_panel:
             
             if uploaded_files:
                 show_status_indicator('success', f'✅ 已选择 {len(uploaded_files)} 个文件')
+
+        # AI智能生成配置
+        elif params.video_source == "ai_generated":
+            st.markdown("**🎨 AI素材生成设置**")
+            
+            ai_col1, ai_col2 = st.columns(2)
+            
+            with ai_col1:
+                # AI生成风格
+                ai_styles = [
+                    ("📸 写实风格", "realistic"),
+                    ("🎨 卡通风格", "cartoon"), 
+                    ("⚪ 简约风格", "minimalist"),
+                    ("🎬 电影风格", "cinematic"),
+                    ("🖼️ 艺术风格", "artistic")
+                ]
+                
+                ai_style_index = st.selectbox(
+                    "🎨 视觉风格",
+                    options=range(len(ai_styles)),
+                    format_func=lambda x: ai_styles[x][0],
+                    index=0,
+                    help="选择AI生成素材的整体视觉风格"
+                )
+                params.ai_material_style = ai_styles[ai_style_index][1]
+                
+                # 生成数量
+                params.ai_material_count = st.slider(
+                    "📊 生成数量",
+                    min_value=3,
+                    max_value=15,
+                    value=5,
+                    help="AI生成的素材数量，建议5-8张以确保视频内容丰富"
+                )
+            
+            with ai_col2:
+                # AI图片提供商
+                ai_providers = [
+                    ("🆓 硅基流动 Kolors", "kolors"),
+                    ("🔥 DALL-E 3", "dalle3"),
+                    ("⚡ Stability AI", "stability")
+                ]
+                
+                ai_provider_index = st.selectbox(
+                    "🤖 AI模型",
+                    options=range(len(ai_providers)),
+                    format_func=lambda x: ai_providers[x][0],
+                    index=0,
+                    help="选择AI图片生成服务提供商"
+                )
+                params.ai_image_provider = ai_providers[ai_provider_index][1]
+                
+                # 生成质量
+                ai_qualities = [
+                    ("标准质量", "standard"),
+                    ("高质量", "high"),
+                    ("超高质量", "ultra")
+                ]
+                
+                ai_quality_index = st.selectbox(
+                    "🎯 生成质量",
+                    options=range(len(ai_qualities)),
+                    format_func=lambda x: ai_qualities[x][0],
+                    index=1,
+                    help="选择AI生成的图片质量等级"
+                )
+                params.ai_material_quality = ai_qualities[ai_quality_index][1]
+            
+            # AI生成开关
+            params.ai_material_enabled = True
+            params.ai_style_consistency = st.checkbox(
+                "🎯 保持风格一致性",
+                value=True,
+                help="确保所有AI生成的素材保持统一的视觉风格"
+            )
+            
+            # 显示AI配置状态
+            if params.ai_image_provider == "kolors":
+                show_status_indicator('success', '🆓 免费模型 - 硅基流动 Kolors')
+            else:
+                show_status_indicator('info', f'💳 付费模型 - {ai_providers[ai_provider_index][0]}')
 
         st.markdown("---")
         

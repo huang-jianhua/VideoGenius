@@ -353,6 +353,7 @@ def render_material_config():
             ("Pexels", "pexels"),
             ("Pixabay", "pixabay"),
             ("本地文件", "local"),
+            ("AI智能生成", "ai_generated"),
         ]
         
         current_source = config.app.get("video_source", "local")
@@ -381,6 +382,8 @@ def render_material_config():
             render_pixabay_config()
         elif selected_source == "local":
             render_local_material_config()
+        elif selected_source == "ai_generated":
+            render_ai_material_config()
 
 
 def render_pexels_config():
@@ -452,6 +455,147 @@ def render_local_material_config():
         os.startfile(local_dir)  # Windows
     
     st.info("💡 支持的视频格式：MP4, AVI, MOV, MKV")
+
+
+def render_ai_material_config():
+    """渲染AI生成素材配置"""
+    st.markdown("#### 🎬 AI生成素材配置")
+    
+    # AI生成配置
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        st.markdown("**AI生成配置**")
+        
+        # AI生成器选择
+        ai_generators = [
+            ("DeepSeek Coder", "deepseek_coder"),
+            ("Claude", "claude"),
+            ("Moonshot", "moonshot"),
+            ("Gemini", "gemini"),
+            ("通义千问", "qwen"),
+        ]
+        
+        current_generator = config.app.get("ai_generator", "deepseek_coder")
+        current_index = 0
+        for i, (name, value) in enumerate(ai_generators):
+            if value == current_generator:
+                current_index = i
+                break
+        
+        selected_generator = st.selectbox(
+            "AI生成器",
+            options=[g[1] for g in ai_generators],
+            format_func=lambda x: next(g[0] for g in ai_generators if g[1] == x),
+            index=current_index,
+            help="选择要使用的AI生成器"
+        )
+        
+        config.app["ai_generator"] = selected_generator
+    
+    with col2:
+        st.markdown("**AI生成配置**")
+        
+        if selected_generator == "deepseek_coder":
+            render_deepseek_coder_config()
+        elif selected_generator == "claude":
+            render_claude_config()
+        elif selected_generator == "moonshot":
+            render_moonshot_config()
+        elif selected_generator == "gemini":
+            render_gemini_config()
+        elif selected_generator == "qwen":
+            render_qwen_config()
+
+
+def render_deepseek_coder_config():
+    """渲染DeepSeek Coder配置"""
+    st.markdown("**DeepSeek Coder配置**")
+    
+    # 配置参数
+    prompt = config.app.get("ai_prompt", "")
+    new_prompt = st.text_input(
+        "🤖 提示词",
+        value=prompt,
+        help="输入AI生成提示词"
+    )
+    
+    if new_prompt != prompt:
+        config.app["ai_prompt"] = new_prompt
+    
+    st.info("💡 [DeepSeek Coder配置说明](https://deepseek.com/coder/)")
+
+
+def render_claude_config():
+    """渲染Claude配置"""
+    st.markdown("**Claude配置**")
+    
+    # 配置参数
+    prompt = config.app.get("ai_prompt", "")
+    new_prompt = st.text_input(
+        "🤖 提示词",
+        value=prompt,
+        help="输入AI生成提示词"
+    )
+    
+    if new_prompt != prompt:
+        config.app["ai_prompt"] = new_prompt
+    
+    st.info("💡 [Claude配置说明](https://console.anthropic.com/)")
+
+
+def render_moonshot_config():
+    """渲染Moonshot配置"""
+    st.markdown("**Moonshot配置**")
+    
+    # 配置参数
+    prompt = config.app.get("ai_prompt", "")
+    new_prompt = st.text_input(
+        "🤖 提示词",
+        value=prompt,
+        help="输入AI生成提示词"
+    )
+    
+    if new_prompt != prompt:
+        config.app["ai_prompt"] = new_prompt
+    
+    st.info("💡 [Moonshot配置说明](https://platform.moonshot.cn/console/api-keys)")
+
+
+def render_gemini_config():
+    """渲染Gemini配置"""
+    st.markdown("**Gemini配置**")
+    
+    # 配置参数
+    prompt = config.app.get("ai_prompt", "")
+    new_prompt = st.text_input(
+        "🤖 提示词",
+        value=prompt,
+        help="输入AI生成提示词"
+    )
+    
+    if new_prompt != prompt:
+        config.app["ai_prompt"] = new_prompt
+    
+    st.info("💡 [Gemini配置说明](https://makersuite.google.com/app/apikey)")
+
+
+def render_qwen_config():
+    """渲染通义千问配置"""
+    st.markdown("**通义千问配置**")
+    
+    # 配置参数
+    prompt = config.app.get("ai_prompt", "")
+    new_prompt = st.text_input(
+        "🤖 提示词",
+        value=prompt,
+        help="输入AI生成提示词"
+    )
+    
+    if new_prompt != prompt:
+        config.app["ai_prompt"] = new_prompt
+    
+    st.info("💡 [通义千问配置说明](https://dashscope.console.aliyun.com/apiKey)")
 
 
 def render_tts_config():

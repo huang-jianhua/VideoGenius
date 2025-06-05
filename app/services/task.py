@@ -2,6 +2,7 @@ import math
 import os.path
 import re
 from os import path
+import asyncio
 
 from loguru import logger
 
@@ -136,6 +137,41 @@ def get_video_materials(task_id, params, video_terms, audio_duration):
             )
             return None
         return [material_info.url for material_info in materials]
+    elif params.video_source == "ai_generated":
+        logger.info("\n\n## generating AI materials")
+        try:
+            from app.services.ai_material_generator import AIMaterialGenerator, MaterialGenerationRequest
+            
+            # 初始化AI素材生成服务
+            ai_service = AIMaterialGenerator()
+            
+            # 构建生成请求
+            ai_request = MaterialGenerationRequest(
+                topic=params.video_subject,
+                style=params.ai_material_style,
+                count=params.ai_material_count,
+                user_tier="free",  # 默认免费用户
+                generation_id=f"video_{task_id}"
+            )
+            
+            # 生成AI素材
+            logger.info(f"开始为主题 '{params.video_subject}' 生成 {params.ai_material_count} 个AI素材")
+            result = asyncio.run(ai_service.generate_materials(ai_request))
+            
+            if not result.materials:
+                sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
+                logger.error("AI素材生成失败，请检查配置和API密钥")
+                return None
+            
+            # 返回生成的素材路径
+            ai_materials = [material.image_path for material in result.materials]
+            logger.info(f"AI素材生成成功：共生成 {len(ai_materials)} 个素材文件")
+            return ai_materials
+            
+        except Exception as e:
+            logger.error(f"AI素材生成过程中发生错误: {str(e)}")
+            sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
+            return None
     else:
         logger.info(f"\n\n## downloading videos from {params.video_source}")
         downloaded_videos = material.download_videos(
